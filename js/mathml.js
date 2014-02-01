@@ -14,14 +14,16 @@ function criarPPL(problema){
 }
 
 function montaMathML(funcao, local){
+	
 	var vars = funcao.funcao.variaveis.length;
 	var numCoef = funcao.funcao.coeficientes.length;
+
 	var mathml;
 	
 	for(var i = 1; i<=vars; i++){
 
 		if (i==1){
-			if (local=='dicionario'){
+			if (local=='dicionario' || local=='recalculo' || local =='rec'){
 				var x = funcao.variavel;
 				var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
 				var check = checkString(frac,"/",true);  //verificar se é uma fração
@@ -31,7 +33,7 @@ function montaMathML(funcao, local){
 				} else {
 					mathml += '<mn>'+funcao.funcao.constante+'</mn>';
 				}
-			}else if(local!='rest'){
+			}else if(local!='rest' && local!='rec2'){
 				mathml = '<math><mi>Z</mi><mo>=</mo>';
 				if (funcao.funcao.constante != null){
 					var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
@@ -42,11 +44,25 @@ function montaMathML(funcao, local){
 						mathml += '<mn>'+funcao.funcao.constante+'</mn>';
 					}
 				}
+			}else if (local == 'rec2'){
+				if (funcao.funcao.constante != null){
+					var frac = funcao.funcao.constante;
+					var check = checkString(frac,"/",true);  //verificar se é uma fração
+					if (check > 0) {
+						mathml = '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+					} else {
+						mathml = '<mn>'+funcao.funcao.constante+'</mn>';
+					}
+				}
 			}else{
 				mathml = '<math>';
 			}
 			
-			var frac = toFrac(roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
+			if(local == 'rec2'){
+				var frac = funcao.funcao.coeficientes[i-1];
+			} else {
+				var frac = toFrac(roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
+			}
 			var check = checkString(frac,"/",true);  //verificar se é uma fração
 			var sinal = frac.toString().charAt(0);	 //verificar se é negativo
 			var elemento = "elemento"+i+"";
@@ -80,8 +96,14 @@ function montaMathML(funcao, local){
 			}
 			mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
 		}else{ // DEMAIS ELEMENTOS DA EQUACAO
-		
-			var frac = toFrac (roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
+			
+			if(local == 'rec2'){
+				var frac = funcao.funcao.coeficientes[i-1];
+			} else {
+				var frac = toFrac(roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
+			}
+			
+			//var frac = toFrac (roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
 			var check = checkString(frac,"/",true);  //verificar se é uma fração
 			var sinal = frac.toString().charAt(0);	 //verificar se é negativo
 			var elemento = "elemento"+i+"";
@@ -215,4 +237,118 @@ function mathml_z_max(z){
 	}
 	mathml += '</math>';
 	return mathml;
+}
+
+/*function criarRecalculo(){
+	var funcao = arguments[0];
+	var iteracao = arguments[1];
+	//console.log(funcao);
+	var local = 'recalculo';
+	var mathml = montaMathML(funcao, local);
+	$('#it'+iteracao+' .recalculo').append('<span>'+mathml+'</span><br />');
+}*/
+
+function montaMatmlRecalculoPrincipal(){
+	var funcao = arguments[0];
+	var mathml = montaMathML(funcao,'rec');
+	console.log(mathml);
+	console.log('---------------');
+}
+
+function montaMatmlRecalculoDemais(){
+	//this,index,subx,coef
+	var funcao = arguments[0];
+	var inCoef = arguments[1];
+	var mathml;
+	var aux = new Folga();
+	
+	//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA É UMA FRAÇÃO
+	var frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
+	var check = checkString(frac,"/",true);  //verificar se é uma fração
+	mathml = '<math><mn>'+frac+'<mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+	
+	mathml += montaMathML(funcao, 'rec2');
+	console.log(mathml);
+	//PRINTA O MATHML NA TELA
+	
+	if(inCoef != 1 && inCoef !=0){
+		for(var i=0;i<funcao.funcao.variaveis.length;i++){
+			aux.funcao.coeficientes[i] = funcao.funcao.coeficientes[i] +'/'+ inCoef;
+			aux.funcao.variaveis[i] = funcao.funcao.variaveis[i];
+		}
+		aux.funcao.constante = funcao.funcao.constante +'/'+ inCoef;
+		aux.variavel = funcao.variavel;
+	}
+	//mathml = '<math><msub><mi>'+aux.variavel.charAt(0)+'</mi><mn>'+aux.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+	mathml = montaMathML(aux, 'rec2');
+	console.log(mathml);
+}
+
+function mathmlRecalculo(){
+	
+	switch(arguments[1]){
+		case 'inicial':
+			var funcao = arguments[0];
+			var mathml = montaMathML(funcao,'rec');
+			console.log(mathml);
+		break;
+		case 'manip':
+			var funcao = arguments[0];
+			var indice = arguments[2];
+			var funcaop1 = new Folga();
+			var funcaop2 = new Folga();
+			var funcaop3 = new Folga();
+			
+			for(var i = 0; i<funcao.funcao.coeficientes.length; i++){
+				if(i==indice){
+					for (var j=0;funcao.funcao.variaveis[i].length;j++) {
+						funcaop2.funcao.variaveis[i] = funcao.funcao.variaveis[i][j];
+						funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i][j];
+						//break;
+					}
+				}else{
+					funcaop1.funcao.variaveis[i] = funcao.funcao.variaveis[i];
+					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
+				}
+			}
+			funcaop1.funcao.variaveis.splice(indice,1);
+			funcaop1.funcao.coeficientes.splice();
+			this.funcao.variaveis.splice(index,1,subvars);
+			this.funcao.coeficientes.splice(index+1,0,subcoefs);
+			
+			var mathml = montaMathML(funcao,'rec');
+			console.log(mathml);
+		break;
+		default:
+			var funcao = arguments[0];
+			var inCoef = arguments[1];
+			var mathml;
+			var aux = new Folga();
+			
+			/****** PASSANDO O ELEMENTO QUE ENTRA E O QUE SAI *****/
+			//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA É UMA FRAÇÃO
+			var frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
+			var check = checkString(frac,"/",true);  //verificar se é uma fração
+			mathml = '<math><mn>'+frac+'<mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			
+			mathml += montaMathML(funcao, 'rec2');
+			console.log(mathml);
+			//PRINTA O MATHML NA TELA
+			/**************************************************/
+			
+			/****** PASSANDO O COEFICIENTE PARA A DIVISÃO *****/
+			if(inCoef != 1 && inCoef !=0){
+				for(var i=0;i<funcao.funcao.variaveis.length;i++){
+					aux.funcao.coeficientes[i] = funcao.funcao.coeficientes[i] +'/'+ inCoef;
+					aux.funcao.variaveis[i] = funcao.funcao.variaveis[i];
+				}
+				aux.funcao.constante = funcao.funcao.constante +'/'+ inCoef;
+				aux.variavel = funcao.variavel;
+			}
+			mathml = '<math><msub><mi>'+aux.variavel.charAt(0)+'</mi><mn>'+aux.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			mathml += montaMathML(aux, 'rec2');
+			console.log(mathml);
+			/**************************************************/
+	}
+
 }
