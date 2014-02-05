@@ -80,8 +80,15 @@ FuncaoObjetivo.prototype.recalcular = function(){
 		var coef = this.funcao.coeficientes[index];
 		
 		if (index!= -1) {
+		
+			//mathml da funcaoObjetivo sem a manipulação
+			mathmlRecalculoFo(this,'fobjetivo');
+			
 			this.funcao.variaveis.splice(index,1,subvars);
 			this.funcao.coeficientes.splice(index+1,0,subcoefs);
+			
+			mathmlRecalculoFo(this,'manip', subcons);
+			
 			var tempArray = new Array();
 			
 			//MULTIPLICA PELO COEFICIENTE DA VARIAVEL QUE SAIU
@@ -90,6 +97,7 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			}
 			
 			var newCons = subcons * coef;
+			this.funcao.constante = newCons;
 			this.funcao.coeficientes.splice(index,1);
 			this.funcao.coeficientes.splice(index,1,tempArray);
 			
@@ -103,6 +111,8 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			this.funcao.coeficientes.splice(index,1);
 			tempArray = tempArray.concat(this.funcao.coeficientes);
 			this.funcao.coeficientes = tempArray;
+			
+			mathmlRecalculoFo(this,'fobjetivo', newCons);
 			
 			var tempCoef=[];
 			var tempVars=[];
@@ -141,16 +151,13 @@ FuncaoObjetivo.prototype.recalcular = function(){
 
 			}
 			
-			newCons = newCons + this.funcao.constante;
-			this.funcao.constante = newCons;
+//			newCons = newCons + this.funcao.constante;
+			//this.funcao.constante = newCons;
 			
 			this.funcao.coeficientes = tempCoef;
 			this.funcao.variaveis = tempVars;
-			/*console.log(this.nome +' = ');
-			console.log(this.funcao.constante);
-			console.log(this.funcao.coeficientes);
-			console.log(this.funcao.variaveis);
-			console.log("-----------");*/
+			
+			mathmlRecalculoFo(this,'fobjetivo');
 		}
 }
 
@@ -254,7 +261,7 @@ Folga.prototype.recalcular = function() {
 			this.funcao.variaveis.splice(index,1,subvars);
 			this.funcao.coeficientes.splice(index+1,0,subcoefs);
 			
-			mathmlRecalculo(this,'manip', index);
+			mathmlRecalculo(this,'manip', subcons);
 						
 			//MULTIPLICA PELO COEFICIENTE DA VARIAVEL QUE SAIU
 			var tempArray = new Array();
@@ -265,7 +272,7 @@ Folga.prototype.recalcular = function() {
 			var newCons = subcons * coef;
 			this.funcao.coeficientes.splice(index,1);
 			this.funcao.coeficientes.splice(index,1,tempArray);
-			
+				
 			tempArray = [];
 			tempArray = this.funcao.variaveis[index].slice(0,this.funcao.variaveis[index].length);
 			this.funcao.variaveis.splice(index,1);
@@ -276,7 +283,9 @@ Folga.prototype.recalcular = function() {
 			this.funcao.coeficientes.splice(index,1);
 			tempArray = tempArray.concat(this.funcao.coeficientes);
 			this.funcao.coeficientes = tempArray;
-		
+			
+			mathmlRecalculo(this,'inicial', newCons);
+			
 			var tempCoef=[];
 			var tempVars=[];
 			var soma = 0;
@@ -320,11 +329,8 @@ Folga.prototype.recalcular = function() {
 			
 			this.funcao.coeficientes = tempCoef;
 			this.funcao.variaveis = tempVars;
-			/*console.log(this.variavel +' = ');
-			console.log(this.funcao.constante);
-			console.log(this.funcao.coeficientes);
-			console.log(this.funcao.variaveis);
-			console.log("-----------");*/
+			
+			mathmlRecalculo(this,'inicial');
 		} else {
 			/*console.log(this.variavel +' = ');
 			console.log(this.funcao.constante);
@@ -372,8 +378,12 @@ Folga.prototype.recalcular = function() {
 		this.funcao.coeficientes = rhs;
 		
 		this.funcao.constante = this.funcao.constante / lhs;
-
-		mathmlRecalculo(this, 'inicial');
+		
+		var frac = toFrac(roundSigDig(this.funcao.constante,15) , 1000, .000000001);
+		var check = checkString(frac,"/",true);
+		if(!(check > 0)) {
+			mathmlRecalculo(this, 'inicial');
+		}
 	
 	}
 	

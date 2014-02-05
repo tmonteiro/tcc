@@ -17,23 +17,41 @@ function montaMathML(funcao, local){
 	
 	var vars = funcao.funcao.variaveis.length;
 	var numCoef = funcao.funcao.coeficientes.length;
-
-	var mathml;
+	var mathml = '';
+	
+	/*if (local == 'manip'){
+		vars = vars + 1;
+	}*/
 	
 	for(var i = 1; i<=vars; i++){
-
-		if (i==1){
+		if (i==1 && local != 'manip'){
 			if (local=='dicionario' || local=='recalculo' || local =='rec'){
 				var x = funcao.variavel;
+				mathml = '<math><msub><mi>'+x.charAt(0)+'</mi><mn>'+x.charAt(1)+'</mn></msub><mo>=</mo>';
+				
 				var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
 				var check = checkString(frac,"/",true);  //verificar se é uma fração
-				mathml = '<math><msub><mi>'+x.charAt(0)+'</mi><mn>'+x.charAt(1)+'</mn></msub><mo>=</mo>';
 				if (check > 0) {
 					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 				} else {
 					mathml += '<mn>'+funcao.funcao.constante+'</mn>';
 				}
-			}else if(local!='rest' && local!='rec2'){
+				if (arguments[2] != null){ /* quando eu tiver 2 constantes na funcao, geralmente durante o recalculo*/
+					var frac = toFrac(roundSigDig(arguments[2],15) , 1000, .000000001);
+					var check = checkString(frac,"/",true);  //verificar se é uma fração
+					var sinal = frac.toString().charAt(0);
+					if (sinal == "-"){
+						mathml += '<mo>-</mo>';
+					} else {
+						mathml += '<mo>+</mo>';
+					}
+					if (check > 0) {
+						mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+					} else {
+						mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+					}
+				}
+			}else if(local!='rest' && local!='rec2' && local != 'manip'){
 				mathml = '<math><mi>Z</mi><mo>=</mo>';
 				if (funcao.funcao.constante != null){
 					var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
@@ -53,8 +71,13 @@ function montaMathML(funcao, local){
 					} else {
 						mathml = '<mn>'+funcao.funcao.constante+'</mn>';
 					}
+				} else {
+					console.log('rec2 sem constante');
 				}
-			}else{
+			}else if (local == 'manip'){
+				break;
+			}
+			else{
 				mathml = '<math>';
 			}
 			
@@ -86,7 +109,7 @@ function montaMathML(funcao, local){
 						mathml += '<mn>'+funcao.funcao.coeficientes[i-1].toString().substring(1,funcao.funcao.coeficientes[i-1].lengh)+'</mn>';
 					}
 				}else{
-					if (local=='dicionario'){ 
+					if (local=='dicionario' || local =='rec' || local == 'rec2'){ 
 						mathml += '<mo>+</mo>'
 					}
 					if(funcao.funcao.coeficientes[i-1] != "1"){
@@ -96,6 +119,16 @@ function montaMathML(funcao, local){
 			}
 			mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
 		}else{ // DEMAIS ELEMENTOS DA EQUACAO
+			
+			if (local == 'manip' && funcao.funcao.constante != null && i==1){
+				var frac = funcao.funcao.constante;
+					var check = checkString(frac,"/",true);  //verificar se é uma fração
+					if (check > 0) {
+						mathml = '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+					} else {
+						mathml = '<mn>'+funcao.funcao.constante+'</mn>';
+					}
+			}
 			
 			if(local == 'rec2'){
 				var frac = funcao.funcao.coeficientes[i-1];
@@ -150,7 +183,11 @@ function montaMathML(funcao, local){
 		mathml += '<mo>&le;</mo>';
 		mathml += '<mn>'+funcao.constante+'</mn>';
 	}
-	mathml += '</math>';
+	
+	if (local != 'manip'){
+		mathml += '</math>';
+	}
+	
 	return (mathml);	
 }//function
 
@@ -289,36 +326,67 @@ function mathmlRecalculo(){
 	switch(arguments[1]){
 		case 'inicial':
 			var funcao = arguments[0];
-			var mathml = montaMathML(funcao,'rec');
+			var mathml = montaMathML(funcao,'rec', arguments[2]);
 			console.log(mathml);
 		break;
 		case 'manip':
 			var funcao = arguments[0];
-			var indice = arguments[2];
+			var subcons = arguments[2];
 			var funcaop1 = new Folga();
 			var funcaop2 = new Folga();
 			var funcaop3 = new Folga();
-			
+			var mathml;
 			for(var i = 0; i<funcao.funcao.coeficientes.length; i++){
-				if(i==indice){
-					for (var j=0;funcao.funcao.variaveis[i].length;j++) {
-						funcaop2.funcao.variaveis[i] = funcao.funcao.variaveis[i][j];
-						funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i][j];
-						//break;
-					}
-				}else{
-					funcaop1.funcao.variaveis[i] = funcao.funcao.variaveis[i];
+				if( !(funcao.funcao.coeficientes[i] instanceof Array) && !(funcao.funcao.variaveis[i] instanceof Array) && funcaop2.funcao.coeficientes.length == 0){
 					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
+					funcaop1.funcao.variaveis[i]  = funcao.funcao.coeficientes[i];
+ 				} else if( !(funcao.funcao.coeficientes[i] instanceof Array) && (funcao.funcao.variaveis[i] instanceof Array) ){
+					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
+					funcaop2.funcao.constante = subcons;
+					for (var j=0; j<funcao.funcao.variaveis[i].length; j++) {
+						funcaop2.funcao.coeficientes[j] = funcao.funcao.coeficientes[i+1][j];
+						funcaop2.funcao.variaveis[j] = funcao.funcao.variaveis[i][j];
+					}
+				} else {
+					break;
 				}
 			}
-			funcaop1.funcao.variaveis.splice(indice,1);
-			funcaop1.funcao.coeficientes.splice();
-			this.funcao.variaveis.splice(index,1,subvars);
-			this.funcao.coeficientes.splice(index+1,0,subcoefs);
+			j=0;
+			do{
+				funcaop3.funcao.coeficientes[j] = funcao.funcao.coeficientes[i+1];
+				funcaop3.funcao.variaveis[j] = funcao.funcao.variaveis[i];
+				i++;
+				j++;
+			} while (!(funcao.funcao.coeficientes[i+1] == undefined));
+
 			
-			var mathml = montaMathML(funcao,'rec');
+			//funcaop1
+			mathml = '<math><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo><mn>'+funcao.funcao.constante+'</mn>';
+			
+			if (funcaop1.funcao.variaveis.length == 0){
+				var cons = funcaop1.funcao.coeficientes[0].toString();
+				
+				if (cons.charAt(0) == "-"){
+					mathml += '<mo>-</mo>';
+					if((cons.substring(1,cons.length)) != 1){
+						mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+					}
+					mathml +='<mo>(</mo>';
+				}
+			} else {
+				var mathmlp1 = montaMathML(funcaop1);
+				mathml += mathmlp1;
+			}
+			//funcaop2
+			mathml += montaMathML(funcaop2, "manip");
+			mathml += '<mo>)</mo>';
+			
+			//funcaop3
+			mathml += montaMathML(funcaop3, "manip");
+			
 			console.log(mathml);
 		break;
+		
 		default:
 			var funcao = arguments[0];
 			var inCoef = arguments[1];
@@ -329,7 +397,7 @@ function mathmlRecalculo(){
 			//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA É UMA FRAÇÃO
 			var frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
 			var check = checkString(frac,"/",true);  //verificar se é uma fração
-			mathml = '<math><mn>'+frac+'<mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			mathml = '<math><mn>'+frac+'</mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
 			
 			mathml += montaMathML(funcao, 'rec2');
 			console.log(mathml);
@@ -350,5 +418,79 @@ function mathmlRecalculo(){
 			console.log(mathml);
 			/**************************************************/
 	}
+}
 
+function mathmlRecalculoFo(){
+	switch(arguments[1]){
+		case 'fobjetivo':
+			var funcao = arguments[0];
+			/*if (arguments[2] != null && funcao.funcao.constante == null) {
+				funcao.funcao.constante = arguments[2];
+			}*/
+			var mathml = montaMathML(funcao,'fobjetivo');
+			console.log("Rec FO: "+ mathml);
+		break;
+		case 'manip':
+			var funcao = arguments[0];
+			var subcons = arguments[2];
+			var funcaop1 = new Folga();
+			var funcaop2 = new Folga();
+			var funcaop3 = new Folga();
+			var mathml;
+			for(var i = 0; i<funcao.funcao.coeficientes.length; i++){
+				if( !(funcao.funcao.coeficientes[i] instanceof Array) && !(funcao.funcao.variaveis[i] instanceof Array) && funcaop2.funcao.coeficientes.length == 0){
+					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
+					funcaop1.funcao.variaveis[i]  = funcao.funcao.coeficientes[i];
+ 				} else if( !(funcao.funcao.coeficientes[i] instanceof Array) && (funcao.funcao.variaveis[i] instanceof Array) ){
+					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
+					funcaop2.funcao.constante = subcons;
+					for (var j=0; j<funcao.funcao.variaveis[i].length; j++) {
+						funcaop2.funcao.coeficientes[j] = funcao.funcao.coeficientes[i+1][j];
+						funcaop2.funcao.variaveis[j] = funcao.funcao.variaveis[i][j];
+					}
+				} else {
+					break;
+				}
+			}
+			j=0;
+			do{
+				funcaop3.funcao.coeficientes[j] = funcao.funcao.coeficientes[i+1];
+				funcaop3.funcao.variaveis[j] = funcao.funcao.variaveis[i];
+				i++;
+				j++;
+			} while (!(funcao.funcao.coeficientes[i+1] == undefined));
+
+			
+			//funcaop1
+			mathml = '<math><mi>Z</mi><mo>=</mo>';
+			
+			if (funcaop1.funcao.variaveis.length == 0){
+				var cons = '<mn>'+funcao.maior.coeficiente+'</mn>';
+				
+				if (cons.charAt(0) == "-"){
+					mathml += '<mo>-</mo>';
+					if((cons.substring(1,cons.length)) != 1){
+						mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+					}
+				} else{
+						mathml += cons;
+					}
+			} else {
+				var mathmlp1 = montaMathML(funcaop1);
+				mathml += mathmlp1;
+			}
+			mathml +='<mo>(</mo>';
+			
+			//funcaop2
+			mathml += montaMathML(funcaop2, "manip");
+			mathml += '<mo>)</mo>';
+			
+			//funcaop3
+			mathml += montaMathML(funcaop3, "manip");
+			mathml += '</math>';
+			console.log(mathml);
+		break;
+		default:
+		alert("ERRO! funcao: mathmlRecalculoFo");
+	}
 }
