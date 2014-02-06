@@ -23,7 +23,7 @@ function montaMathML(funcao, local){
 		vars = vars + 1;
 	}*/
 	
-	for(var i = 1; i<=vars; i++){
+	for(var i = 1; i<=numCoef; i++){
 		if (i==1 && local != 'manip'){
 			if (local=='dicionario' || local=='recalculo' || local =='rec'){
 				var x = funcao.variavel;
@@ -339,7 +339,7 @@ function mathmlRecalculo(){
 			for(var i = 0; i<funcao.funcao.coeficientes.length; i++){
 				if( !(funcao.funcao.coeficientes[i] instanceof Array) && !(funcao.funcao.variaveis[i] instanceof Array) && funcaop2.funcao.coeficientes.length == 0){
 					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
-					funcaop1.funcao.variaveis[i]  = funcao.funcao.coeficientes[i];
+					funcaop1.funcao.variaveis[i]  = funcao.funcao.variaveis[i];
  				} else if( !(funcao.funcao.coeficientes[i] instanceof Array) && (funcao.funcao.variaveis[i] instanceof Array) ){
 					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
 					funcaop2.funcao.constante = subcons;
@@ -371,9 +371,12 @@ function mathmlRecalculo(){
 					if((cons.substring(1,cons.length)) != 1){
 						mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
 					}
-					mathml +='<mo>(</mo>';
+				} else {
+					mathml += '<mo>+</mo>';
 				}
-			} else {
+				mathml +='<mo>(</mo>';
+			} 
+			else {
 				var mathmlp1 = montaMathML(funcaop1);
 				mathml += mathmlp1;
 			}
@@ -415,6 +418,7 @@ function mathmlRecalculo(){
 			}
 			mathml = '<math><msub><mi>'+aux.variavel.charAt(0)+'</mi><mn>'+aux.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
 			mathml += montaMathML(aux, 'rec2');
+			
 			console.log(mathml);
 			/**************************************************/
 	}
