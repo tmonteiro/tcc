@@ -63,22 +63,24 @@ function montaMathML(funcao, local){
 					mathml += '<mo>+</mo>';
 				}
 				mathml += '<mfrac><mn>'+fracao.numerador+'</mn><mn>'+fracao.denominador+'</mn></mfrac>';
-			}else { //inteiro*/	
+				mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
+			}else if (frac != 0){ //inteiro*/	
 				if (sinal == "-"){
 					mathml += '<mo>-</mo>';
 					if(funcao.funcao.coeficientes[i-1] != "-1"){
 						mathml += '<mn>'+funcao.funcao.coeficientes[i-1].toString().substring(1,funcao.funcao.coeficientes[i-1].lengh)+'</mn>';
 					}
 				}else{
-					if (local=='dicionario'){ 
+					if (local=='dicionario' || (local=='fo' && funcao.funcao.constante != null)){ 
 						mathml += '<mo>+</mo>'
 					}
 					if(funcao.funcao.coeficientes[i-1] != "1"){
 						mathml += '<mn>'+funcao.funcao.coeficientes[i-1]+'</mn>'
 					}
 				}
+				mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
 			}
-			mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
+			
 		}else{ // DEMAIS ELEMENTOS DA EQUACAO
 		
 			var frac = toFrac (roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
