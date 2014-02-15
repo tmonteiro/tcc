@@ -42,7 +42,7 @@ FuncaoObjetivo.prototype.verificarSolucao = function () {
 	var neg = new Array();
 	for (i=0; i<temp.length; i++){
 		var aux = temp[i];
-		if (aux < 0) {
+		if (aux <= 0) {
 			neg[i] = aux;
 		} else {
 			// AINDA EXISTEM VARIAVEIS QUE PODEM INCREMENTAR O Z
@@ -145,8 +145,8 @@ FuncaoObjetivo.prototype.recalcular = function(){
 					}else{
 						soma = valor[0];
 					}
-					tempCoef[i] = soma;
-					tempVars[i] = variavel;
+					tempCoef.push(soma);
+					tempVars.push(variavel);
 				}
 
 			}
@@ -318,8 +318,8 @@ Folga.prototype.recalcular = function() {
 					}else{
 						soma = valor[0];
 					}
-					tempCoef[i] = soma;
-					tempVars[i] = variavel;
+					tempCoef.push(soma);
+					tempVars.push(variavel);
 				}
 
 			}
@@ -438,10 +438,11 @@ function Dicionario() {
 
 Dicionario.prototype.setBase = function() {
 	var rest = arguments[0];
+	var indVar = problema.funcaoObjetivo.funcao.variaveis.length;
 	
-	for (var i=0; i<rest.length; i++) {
-		this.funcaoFolga[i] = new Folga();
-		this.funcaoFolga[i].setFolga(rest[i],rest.length+i); 
+	for (var i=1; i<=rest.length; i++) {
+		this.funcaoFolga[i-1] = new Folga();
+		this.funcaoFolga[i-1].setFolga(rest[i-1],indVar+i); 
 	}
 }
 
