@@ -36,21 +36,7 @@ function montaMathML(funcao, local){
 				} else {
 					mathml += '<mn>'+funcao.funcao.constante+'</mn>';
 				}
-				if (arguments[2] != null){ /* quando eu tiver 2 constantes na funcao, geralmente durante o recalculo*/
-					var frac = toFrac(roundSigDig(arguments[2],15) , 1000, .000000001);
-					var check = checkString(frac,"/",true);  //verificar se é uma fração
-					var sinal = frac.toString().charAt(0);
-					if (sinal == "-"){
-						mathml += '<mo>-</mo>';
-					} else {
-						mathml += '<mo>+</mo>';
-					}
-					if (check > 0) {
-						mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
-					} else {
-						mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
-					}
-				}
+				
 			}else if(local!='rest' && local!='rec2' && local != 'manip'){
 				mathml = '<math><mi>Z</mi><mo>=</mo>';
 				if (funcao.funcao.constante != null){
@@ -80,6 +66,31 @@ function montaMathML(funcao, local){
 			else{
 				mathml = '<math>';
 			}
+			//************************//
+			if (arguments[2] != null){ /* quando eu tiver 2 constantes na funcao, geralmente durante o recalculo*/
+				var frac = toFrac(roundSigDig(arguments[2],15) , 1000, .000000001);
+				var check = checkString(frac,"/",true);  //verificar se é uma fração
+				var sinal = frac.toString().charAt(0);
+				
+				if (sinal == "-"){
+					mathml += '<mo>-</mo>';
+					if (check > 0) {
+						mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+					} else {
+						mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+					}
+				} else {
+					if (local != 'z' || funcao.funcao.constante != null){
+						mathml += '<mo>+</mo>';
+					}
+					if (check > 0) {
+						mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+					} else {
+						mathml += '<mn>'+frac+'</mn>';
+					}
+				}
+			}
+			//************************//
 			
 			if(local == 'rec2'){
 				var frac = funcao.funcao.coeficientes[i-1];
@@ -110,12 +121,22 @@ function montaMathML(funcao, local){
 						mathml += '<mn>'+funcao.funcao.coeficientes[i-1].toString().substring(1,funcao.funcao.coeficientes[i-1].lengh)+'</mn>';
 					}
 				}else{
-					if (local=='dicionario' || (local=='fo' && funcao.funcao.constante != null)){ 
-						mathml += '<mo>+</mo>'
+					if ( funcao.funcao.constante != null && funcao.funcao.coeficientes[i-1] != 1 ) {
+						mathml += '<mo>+</mo>';
+						mathml += '<mn>'+funcao.funcao.coeficientes[i-1]+'</mn>';
+					} else if ( funcao.funcao.constante != null && funcao.funcao.coeficientes[i-1] == 1 ){
+						mathml += '<mo>+</mo>';
+					}else if ( funcao.funcao.coeficientes[i-1] != 1 ) {
+						mathml += '<mn>'+funcao.funcao.coeficientes[i-1]+'</mn>';
 					}
-					if(funcao.funcao.coeficientes[i-1] != "1"){
-						mathml += '<mn>'+funcao.funcao.coeficientes[i-1]+'</mn>'
-					}
+					/*if (local == 'rec' && )
+					if ((local=='dicionario' && funcao.funcao.coeficientes[i-1] != 1) || (funcao.funcao.constante != null && local!='dicionario')){ 
+						mathml += '<mo>+</mo>';
+						mathml += '<mn>'+funcao.funcao.coeficientes[i-1]+'</mn>';
+					} else if(funcao.funcao.coeficientes[i-1] != 1){
+						//mathml += '<mo>+</mo>';
+						mathml += '<mn>'+funcao.funcao.coeficientes[i-1]+'</mn>';
+					}*/
 				}
 				mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
 			}
@@ -123,7 +144,7 @@ function montaMathML(funcao, local){
 		}else{ // DEMAIS ELEMENTOS DA EQUACAO
 			
 			if (local == 'manip' && funcao.funcao.constante != null && i==1){
-				var frac = funcao.funcao.constante;
+				var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
 					var check = checkString(frac,"/",true);  //verificar se é uma fração
 					if (check > 0) {
 						mathml = '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
@@ -173,8 +194,9 @@ function montaMathML(funcao, local){
 					}
 				}
 			}
-			mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
-			
+			if (typeof funcao.funcao.variaveis[i-1] != 'undefined') {
+				mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
+			}
 		}
 		
 	} //for
@@ -327,9 +349,35 @@ function mathmlRecalculo(){
 	
 	switch(arguments[1]){
 		case 'inicial':
+			var iteracao = arguments[2];
 			var funcao = arguments[0];
-			var mathml = montaMathML(funcao,'rec', arguments[2]);
-			console.log(mathml);
+			var mathml = montaMathML(funcao,'rec');
+			
+			$('#it'+iteracao+' > .recalculo').append('<div class="rec_eq" style="margin-bottom:20px"></div>');
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
+		break;
+		case 'final':
+			var funcao = arguments[0];
+			var mathml = '';
+			if (funcao.nome == "z"){
+				//mathml += '<math><mi>Z</mi><mo>=</mo>';
+				if(arguments.length == 3){
+					var newCons = arguments[2];
+					mathml += montaMathML(funcao,'z',newCons);
+				} else{
+					mathml += montaMathML(funcao,'z');
+				}
+			}else {
+				if(arguments.length == 3){
+					var newCons = arguments[2];
+					mathml += montaMathML(funcao,'rec',newCons);
+				} else{
+					mathml += montaMathML(funcao,'rec');
+				}
+			}
+			//$('#it'+iteracao+' > .recalculo').append('<div>'+mathml+'</div>');
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
+			//console.log(mathml);
 		break;
 		case 'manip':
 			var funcao = arguments[0];
@@ -363,33 +411,52 @@ function mathmlRecalculo(){
 
 			
 			//funcaop1
-			mathml = '<math><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo><mn>'+funcao.funcao.constante+'</mn>';
+			mathml = '<math><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
+			var check = checkString(frac,"/",true);  //verificar se é uma fração
+			if (check > 0) {
+					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+			} else {
+					mathml += '<mn>'+frac+'</mn>';
+			}
 			
 			if (funcaop1.funcao.variaveis.length == 0){
-				var cons = funcaop1.funcao.coeficientes[0].toString();
-				
-				if (cons.charAt(0) == "-"){
-					mathml += '<mo>-</mo>';
-					if((cons.substring(1,cons.length)) != 1){
-						mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+				var cons = toFrac(roundSigDig(funcaop1.funcao.coeficientes[0],15) , 1000, .000000001); //funcaop1.funcao.coeficientes[0].toString();
+				var check = checkString(cons,"/",true);
+				if (check > 0) {
+					if (cons.charAt(0) == "-"){
+						mathml += '<mo>-</mo>';
+						mathml += '<mfrac><mn>'+cons.substring(1,check)+'</mn><mn>'+cons.substring(check+1, cons.length)+'</mn></mfrac>';
+					} else {
+						mathml += '<mo>+</mo>';
+						mathml += '<mfrac><mn>'+cons.substring(0,check)+'</mn><mn>'+cons.substring(check+1, cons.length)+'</mn></mfrac>';
 					}
 				} else {
-					mathml += '<mo>+</mo>';
+					if (cons.charAt(0) == "-"){
+						mathml += '<mo>-</mo>';
+						if((cons.substring(1,cons.length)) != 1){
+							mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+						}
+					} else {
+						mathml += '<mo>+</mo>';
+					}
 				}
 				mathml +='<mo>(</mo>';
-			} 
-			else {
-				var mathmlp1 = montaMathML(funcaop1);
-				mathml += mathmlp1;
+			}else {
+				var mathmlp1 = montaMathML(funcaop1,"manip");
+				mathml += mathmlp1 + '<mo>(</mo>';
 			}
 			//funcaop2
 			mathml += montaMathML(funcaop2, "manip");
 			mathml += '<mo>)</mo>';
 			
 			//funcaop3
-			mathml += montaMathML(funcaop3, "manip");
+			if(typeof funcaop3.funcao.coeficientes[0] != 'undefined') {
+				mathml += montaMathML(funcaop3, "manip");
+			}
 			
-			console.log(mathml);
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
+			//console.log(mathml);
 		break;
 		
 		default:
@@ -402,15 +469,20 @@ function mathmlRecalculo(){
 			//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA É UMA FRAÇÃO
 			var frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
 			var check = checkString(frac,"/",true);  //verificar se é uma fração
-			mathml = '<math><mn>'+frac+'</mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			if (check > 0) {
+				mathml = '<math><mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			} else {
+				mathml = '<math><mn>'+frac+'</mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+			}
 			
 			mathml += montaMathML(funcao, 'rec2');
-			console.log(mathml);
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
+			//console.log(mathml);
 			//PRINTA O MATHML NA TELA
 			/**************************************************/
 			
 			/****** PASSANDO O COEFICIENTE PARA A DIVISÃO *****/
-			if(inCoef != 1 && inCoef !=0){
+			if(inCoef !=0){
 				for(var i=0;i<funcao.funcao.variaveis.length;i++){
 					aux.funcao.coeficientes[i] = funcao.funcao.coeficientes[i] +'/'+ inCoef;
 					aux.funcao.variaveis[i] = funcao.funcao.variaveis[i];
@@ -420,22 +492,37 @@ function mathmlRecalculo(){
 			}
 			mathml = '<math><msub><mi>'+aux.variavel.charAt(0)+'</mi><mn>'+aux.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
 			mathml += montaMathML(aux, 'rec2');
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
 			
-			console.log(mathml);
+			//console.log(mathml);
 			/**************************************************/
 	}
 }
 
 function mathmlRecalculoFo(){
+	
 	switch(arguments[1]){
 		case 'fobjetivo':
+			var iteracao = arguments[2];
 			var funcao = arguments[0];
 			/*if (arguments[2] != null && funcao.funcao.constante == null) {
 				funcao.funcao.constante = arguments[2];
 			}*/
 			var mathml = montaMathML(funcao,'fobjetivo');
-			console.log("Rec FO: "+ mathml);
+			$('#it'+iteracao+' > .recalculo').append('<div class="rec_eq" style="margin-bottom:20px"></div>');
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
 		break;
+		case 'final':
+			var funcao = arguments[0];
+			if(arguments.length == 3){
+				var newCons = arguments[2];
+				var mathml = montaMathML(funcao,'fobjetivo',newCons);
+			} else{
+				var mathml = montaMathML(funcao,'fobjetivo');
+			}
+			//$('#it'+iteracao+' > .recalculo').append('<div>'+mathml+'</div>');
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
+			//console.log(mathml);
 		case 'manip':
 			var funcao = arguments[0];
 			var subcons = arguments[2];
@@ -446,7 +533,7 @@ function mathmlRecalculoFo(){
 			for(var i = 0; i<funcao.funcao.coeficientes.length; i++){
 				if( !(funcao.funcao.coeficientes[i] instanceof Array) && !(funcao.funcao.variaveis[i] instanceof Array) && funcaop2.funcao.coeficientes.length == 0){
 					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
-					funcaop1.funcao.variaveis[i]  = funcao.funcao.coeficientes[i];
+					funcaop1.funcao.variaveis[i]  = funcao.funcao.variaveis[i];
  				} else if( !(funcao.funcao.coeficientes[i] instanceof Array) && (funcao.funcao.variaveis[i] instanceof Array) ){
 					funcaop1.funcao.coeficientes[i] = funcao.funcao.coeficientes[i];
 					funcaop2.funcao.constante = subcons;
@@ -467,36 +554,128 @@ function mathmlRecalculoFo(){
 			} while (!(funcao.funcao.coeficientes[i+1] == undefined));
 
 			
-			//funcaop1
+			//*************funcaop1 *************//
 			mathml = '<math><mi>Z</mi><mo>=</mo>';
 			
-			if (funcaop1.funcao.variaveis.length == 0){
-				var cons = '<mn>'+funcao.maior.coeficiente+'</mn>';
+			if(funcao.funcao.constante != null){
+			
+				var cons = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001); //funcaop1.funcao.coeficientes[0].toString();
+				var check = checkString(cons,"/",true);
+				if (check > 0) {
+					if (cons.charAt(0) == "-"){
+						mathml += '<mo>-</mo>';
+						mathml += '<mfrac><mn>'+cons.substring(1,check)+'</mn><mn>'+cons.substring(check+1, cons.length)+'</mn></mfrac>';
+					} else {
+						//mathml += '<mo>+</mo>';
+						mathml += '<mfrac><mn>'+cons.substring(0,check)+'</mn><mn>'+cons.substring(check+1, cons.length)+'</mn></mfrac>';
+					}
+				} else {
+					if (cons.charAt(0) == "-"){
+						mathml += '<mo>-</mo>';
+						if((cons.substring(1,cons.length)) != 1){
+							mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+						}
+					} else {
+						//mathml += '<mo>+</mo>';
+						mathml += '<mn>'+cons+'</mn>';
+					}
+				}
 				
-				if (cons.charAt(0) == "-"){
-					mathml += '<mo>-</mo>';
-					if((cons.substring(1,cons.length)) != 1){
-						mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+				//mathml += '<mn>'+funcao.funcao.constante+'</mn>';
+			}
+			
+			if (funcaop1.funcao.variaveis.length == 0){
+			
+				var cons = toFrac(roundSigDig(funcao.maior.coeficiente,15) , 1000, .000000001); //funcaop1.funcao.coeficientes[0].toString();
+				var check = checkString(cons,"/",true);
+				if (check > 0) {
+					if (cons.charAt(0) == "-"){
+						mathml += '<mo>-</mo>';
+						mathml += '<mfrac><mn>'+cons.substring(1,check)+'</mn><mn>'+cons.substring(check+1, cons.length)+'</mn></mfrac>';
+					} else {
+						mathml += '<mo>+</mo>';
+						mathml += '<mfrac><mn>'+cons.substring(0,check)+'</mn><mn>'+cons.substring(check+1, cons.length)+'</mn></mfrac>';
 					}
-				} else{
-						mathml += cons;
+				} else {
+					if (cons.charAt(0) == "-"){
+						mathml += '<mo>-</mo>';
+						if((cons.substring(1,cons.length)) != 1){
+							mathml += '<mn>'+cons.substring(1,cons.length)+'</mn>';
+						}
+					} else {
+						//mathml += '<mo>+</mo>';
+						mathml += '<mn>'+cons+'</mn>';
 					}
-			} else {
-				var mathmlp1 = montaMathML(funcaop1);
+				}
+			}
+			if (funcaop1.funcao.variaveis.length != 0){
+				var mathmlp1 = montaMathML(funcaop1,"manip");
 				mathml += mathmlp1;
 			}
 			mathml +='<mo>(</mo>';
+			//*************funcaop1 *************//
 			
 			//funcaop2
 			mathml += montaMathML(funcaop2, "manip");
 			mathml += '<mo>)</mo>';
 			
 			//funcaop3
-			mathml += montaMathML(funcaop3, "manip");
+			if(typeof funcaop3.funcao.coeficientes[0] != 'undefined') {
+				mathml += montaMathML(funcaop3, "manip");
+			}
 			mathml += '</math>';
-			console.log(mathml);
+			$('.rec_eq').last().append('<div>'+mathml+'</div>');
 		break;
 		default:
 		alert("ERRO! funcao: mathmlRecalculoFo");
 	}
+}
+
+function monta_mathml_rec01(funcao) { /* INICIAL */
+	alert('mathml.monta_mathml_rec01');
+	
+	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
+	var cons = funcao.funcao.constante;
+	var vars = funcao.funcao.variaveis;
+	var coef = funcao.funcao.coeficientes;
+
+	var numCoef = funcao.funcao.coeficientes.length;
+	var mathml = '';
+	
+	/* LHS DA FUNCAO */
+	mathml += "<math><msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
+	/* ***************** */
+	
+	/* CONSTANTE */
+	if (cons != null) {
+		mathml += "";
+	}	
+	/* ***************** */
+	
+	
+	for(var i = 1; i<=numCoef; i++){
+		
+		if (i==1 && local != 'manip'){
+			if (local=='dicionario' || local=='recalculo' || local =='rec'){
+				var x = funcao.variavel;
+				mathml = '<math><msub><mi>'+x.charAt(0)+'</mi><mn>'+x.charAt(1)+'</mn></msub><mo>=</mo>';
+				
+				var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
+				var check = checkString(frac,"/",true);  //verificar se ? uma fra??o
+				if (check > 0) {
+					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+				} else {
+					mathml += '<mn>'+funcao.funcao.constante+'</mn>';
+				}
+			}
+		}
+	}
+}
+
+function monta_mathml_rec02() {
+	alert('mathml.monta_mathml_rec02');
+}
+
+function monta_mathml_rec03() {
+	alert('mathml.monta_mathml_rec03');
 }

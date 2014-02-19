@@ -82,12 +82,12 @@ FuncaoObjetivo.prototype.recalcular = function(){
 		if (index!= -1) {
 		
 			//mathml da funcaoObjetivo sem a manipulação
-			mathmlRecalculoFo(this,'fobjetivo');
+			mathmlRecalculoFo(this,'fobjetivo', arguments[1]);
 			
 			this.funcao.variaveis.splice(index,1,subvars);
 			this.funcao.coeficientes.splice(index+1,0,subcoefs);
 			
-			mathmlRecalculoFo(this,'manip', subcons);
+			mathmlRecalculoFo(this,'manip', subcons,arguments[1]);
 			
 			var tempArray = new Array();
 			
@@ -97,7 +97,7 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			}
 			
 			var newCons = subcons * coef;
-			this.funcao.constante = newCons;
+			//this.funcao.constante = newCons;
 			this.funcao.coeficientes.splice(index,1);
 			this.funcao.coeficientes.splice(index,1,tempArray);
 			
@@ -112,8 +112,8 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			tempArray = tempArray.concat(this.funcao.coeficientes);
 			this.funcao.coeficientes = tempArray;
 			
-			mathmlRecalculoFo(this,'fobjetivo', newCons);
-			
+			mathmlRecalculo(this,'final', newCons);
+						
 			var tempCoef=[];
 			var tempVars=[];
 			var soma = 0;
@@ -151,8 +151,8 @@ FuncaoObjetivo.prototype.recalcular = function(){
 
 			}
 			
-//			newCons = newCons + this.funcao.constante;
-			//this.funcao.constante = newCons;
+			newCons = newCons + this.funcao.constante;
+			this.funcao.constante = newCons;
 			
 			this.funcao.coeficientes = tempCoef;
 			this.funcao.variaveis = tempVars;
@@ -256,7 +256,7 @@ Folga.prototype.recalcular = function() {
 		if (index!= -1) {
 			
 			//mathml da equação inicial sem a manipulação
-			mathmlRecalculo(this,'inicial');
+			mathmlRecalculo(this,'inicial', arguments[1]);
 				
 			this.funcao.variaveis.splice(index,1,subvars);
 			this.funcao.coeficientes.splice(index+1,0,subcoefs);
@@ -284,7 +284,7 @@ Folga.prototype.recalcular = function() {
 			tempArray = tempArray.concat(this.funcao.coeficientes);
 			this.funcao.coeficientes = tempArray;
 			
-			mathmlRecalculo(this,'inicial', newCons);
+			mathmlRecalculo(this,'final', newCons);
 			
 			var tempCoef=[];
 			var tempVars=[];
@@ -330,7 +330,7 @@ Folga.prototype.recalcular = function() {
 			this.funcao.coeficientes = tempCoef;
 			this.funcao.variaveis = tempVars;
 			
-			mathmlRecalculo(this,'inicial');
+			mathmlRecalculo(this,'final');
 		} else {
 			/*console.log(this.variavel +' = ');
 			console.log(this.funcao.constante);
@@ -340,9 +340,9 @@ Folga.prototype.recalcular = function() {
 		}
 	}//se foi passado apenas os variaveis que in e out 
 	else {
-	
+		var iteracao = arguments[2];
 		//mathml da equação inicial sem a manipulação
-		mathmlRecalculo(this,'inicial');
+		mathmlRecalculo(this,'inicial',iteracao);
 		
 		var sai = arguments[0];
 		var entra = arguments[1];
@@ -366,7 +366,7 @@ Folga.prototype.recalcular = function() {
 		
 		aux[0] = aux[0]*(-1);
 		
-		mathmlRecalculo(this, aux[0]); //MONTAR O MATHML PASSANDO A FUNCAO E O COEFICIENTE DA VARIAVEL QUE ENTROU
+		mathmlRecalculo(this, aux[0], iteracao); //MONTAR O MATHML PASSANDO A FUNCAO E O COEFICIENTE DA VARIAVEL QUE ENTROU
 		
 		var lhs = aux[0];
 		var rhs = this.funcao.coeficientes;
@@ -382,7 +382,7 @@ Folga.prototype.recalcular = function() {
 		var frac = toFrac(roundSigDig(this.funcao.constante,15) , 1000, .000000001);
 		var check = checkString(frac,"/",true);
 		if(!(check > 0)) {
-			mathmlRecalculo(this, 'inicial');
+			mathmlRecalculo(this, 'final');
 		}
 	
 	}
@@ -527,7 +527,7 @@ Dicionario.prototype.recalculoEquacoes = function() {
 	//montaMatmlRecalculoPrincipal(this.funcaoFolga[aux]);
 	
 	//recalculo da principal
-	this.funcaoFolga[aux].recalcular(sai, entra);
+	this.funcaoFolga[aux].recalcular(sai, entra,iteracao);
 	
 	var funcao = {
 				variavel : this.funcaoFolga[aux].variavel,
@@ -546,7 +546,7 @@ Dicionario.prototype.recalculoEquacoes = function() {
 	}
 	
 	//recalculo da funcao objetivo
-	this.funcaoObjetivo.recalcular(funcao);
+	this.funcaoObjetivo.recalcular(funcao, iteracao);
 }
 
 Dicionario.prototype.setMaxZ = function(){

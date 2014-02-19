@@ -101,11 +101,11 @@
 					$('ul.tabs').append('<li><a href="#it'+iteracao+'"> '+iteracao+'ª Iteração</a></li>');
 
 					//ANALISE DAS FORCAS RESTRITIVAS
-					$('#it'+iteracao+'').append('<div class="dicionario"><h4>Dicionario '+iteracao+'ª Iteração</h4></div>');
+					//$('#it'+iteracao+'').append('<div class="dicionario"><h4>Dicionario '+iteracao+'ª Iteração</h4></div>');
 					dicionario.analise_ff(iteracao);
 					
 					//RECALCULO DAS EQUACOES
-					$('#it'+iteracao+'').append('<div class="recalculo"><span><h4>Recalculo das equações da '+iteracao+'ª Iteração</h4></span><br /></div>');
+					$('#it'+iteracao+'').append('<div class="recalculo"><span><h4>Recalculo das equações da '+iteracao+'ª Iteração</h4></span></div>');
 					dicionario.recalculoEquacoes(iteracao);
 					
 					dicionario.setSolucao();
