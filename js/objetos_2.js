@@ -338,7 +338,8 @@ Folga.prototype.recalcular = function() {
 			console.log(this.funcao.variaveis);
 			console.log("-----------");*/
 		}
-	}//se foi passado apenas os variaveis que in e out 
+	}
+	//se foi passado apenas os variaveis que in e out - RECALCULO DA PRINCIPAL
 	else {
 		var iteracao = arguments[2];
 		//mathml da equação inicial sem a manipulação
@@ -347,6 +348,7 @@ Folga.prototype.recalcular = function() {
 		var sai = arguments[0];
 		var entra = arguments[1];
 		var aux = [];
+		var dec = false;
 		
 		if(sai!=this.variavel){return alert("Erro.");}
 		
@@ -373,17 +375,28 @@ Folga.prototype.recalcular = function() {
 		
 		for (var i=0; i<rhs.length; i++){
 			rhs[i] = rhs[i]/lhs;
+			if(parseFloat(rhs[i]) != parseInt(rhs[i])){
+				dec = true
+			} 
 		}
 		this.funcao.coeficientes = new Array();
 		this.funcao.coeficientes = rhs;
 		
 		this.funcao.constante = this.funcao.constante / lhs;
 		
-		var frac = toFrac(roundSigDig(this.funcao.constante,15) , 1000, .000000001);
-		var check = checkString(frac,"/",true);
-		if(!(check > 0)) {
-			mathmlRecalculo(this, 'final');
-		}
+		if(parseFloat(this.funcao.constante) == parseInt(this.funcao.constante)){
+			dec = false
+		} 
+		
+		//if(lhs != 1 && !(dec)){
+			mathmlRecalculo(this,'final','style');
+		//}
+		
+		//var frac = toFrac(roundSigDig(this.funcao.constante,15) , 1000, .000000001);
+		//var check = checkString(frac,"/",true);
+		//if((check < 0) && lhs != 1) {
+		//	mathmlRecalculo(this, 'final');
+		//}
 	
 	}
 	
