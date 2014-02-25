@@ -99,16 +99,23 @@
 					iteracao++;
 					$('body').append('<div id="it'+iteracao+'" class="main" hidden></div>');
 					$('ul.tabs').append('<li><a href="#it'+iteracao+'"> '+iteracao+'ª Iteração</a></li>');
-					
-					$('#it'+iteracao+'').append('<div class="dicionario"><h4>Dicionario '+iteracao+'ª Iteração</h4></div>');
-					
+
+					//ANALISE DAS FORCAS RESTRITIVAS
+					//$('#it'+iteracao+'').append('<div class="dicionario"><h4>Dicionario '+iteracao+'ª Iteração</h4></div>');
 					dicionario.analise_ff(iteracao);
-					dicionario.recalculoEquacoes();
+					
+					//RECALCULO DAS EQUACOES
+					$('#it'+iteracao+'').append('<div class="recalculo"><span><h4>Recalculo das equações da '+iteracao+'ª Iteração</h4></span></div>');
+					dicionario.recalculoEquacoes(iteracao);
+					
 					dicionario.setSolucao();
 					dicionario.setMaxZ();
 					
+					//DICIONARIO
+					$('#it'+iteracao+'').append('<div class="dicionario"><h4>Dicionario '+iteracao+'ª Iteração</h4></div>');
 					criarMathDic(dicionario, iteracao);
 					
+					//VERIFICAR SE A SOLUCAO É OTIMA
 					solucao_otima = dicionario.funcaoObjetivo.verificarSolucao();
 					
 					$('#it'+iteracao+'').append('<div class="footer"></div>');

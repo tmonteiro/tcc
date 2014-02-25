@@ -259,6 +259,10 @@ function extrair_array_elementos(inString, sep) {
 	}	
 	outArray[numSep] = inString.substring(local[numSep]+1, length);
 	
+	if(outArray[outArray.length-1] == ''){
+		outArray.pop();
+	}
+	
 	return (outArray);
 }
 

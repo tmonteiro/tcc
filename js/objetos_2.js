@@ -8,11 +8,11 @@ function FuncaoObjetivo() {
 		coeficientes : new Array(),
 		variaveis : new Array(),
 		constante : null
-		};
+	};
 	this.maior = {
 		coeficiente: new Number(),
 		variavel: new String()
-		};
+	};
 }
 
 FuncaoObjetivo.prototype.setTipo = function(inString) {
@@ -78,9 +78,17 @@ FuncaoObjetivo.prototype.recalcular = function(){
 		var subcoefs = arguments[0].coeficientes;
 		var index = this.funcao.variaveis.indexOf(subx);
 		var coef = this.funcao.coeficientes[index];
+		
 		if (index!= -1) {
+		
+			//mathml da funcaoObjetivo sem a manipulação
+			mathmlRecalculoFo(this,'fobjetivo', arguments[1]);
+			
 			this.funcao.variaveis.splice(index,1,subvars);
 			this.funcao.coeficientes.splice(index+1,0,subcoefs);
+			
+			mathmlRecalculoFo(this,'manip', subcons,arguments[1]);
+			
 			var tempArray = new Array();
 			
 			//MULTIPLICA PELO COEFICIENTE DA VARIAVEL QUE SAIU
@@ -89,6 +97,7 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			}
 			
 			var newCons = subcons * coef;
+			//this.funcao.constante = newCons;
 			this.funcao.coeficientes.splice(index,1);
 			this.funcao.coeficientes.splice(index,1,tempArray);
 			
@@ -103,6 +112,8 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			tempArray = tempArray.concat(this.funcao.coeficientes);
 			this.funcao.coeficientes = tempArray;
 			
+			mathmlRecalculo(this,'final', newCons);
+						
 			var tempCoef=[];
 			var tempVars=[];
 			var soma = 0;
@@ -145,11 +156,8 @@ FuncaoObjetivo.prototype.recalcular = function(){
 			
 			this.funcao.coeficientes = tempCoef;
 			this.funcao.variaveis = tempVars;
-			/*console.log(this.nome +' = ');
-			console.log(this.funcao.constante);
-			console.log(this.funcao.coeficientes);
-			console.log(this.funcao.variaveis);
-			console.log("-----------");*/
+			
+			mathmlRecalculoFo(this,'fobjetivo');
 		}
 }
 
@@ -235,7 +243,8 @@ Folga.prototype.setFolga = function() {
 }
 
 Folga.prototype.recalcular = function() {
-
+	
+	//se foi passado a funcao principal da variavel que sera substituida
 	if(arguments[0] instanceof Object){
 		var subx = arguments[0].variavel;
 		var subcons = arguments[0].constante;
@@ -245,12 +254,17 @@ Folga.prototype.recalcular = function() {
 		var coef = this.funcao.coeficientes[index];
 		
 		if (index!= -1) {
-		
+			
+			//mathml da equação inicial sem a manipulação
+			mathmlRecalculo(this,'inicial', arguments[1]);
+				
 			this.funcao.variaveis.splice(index,1,subvars);
 			this.funcao.coeficientes.splice(index+1,0,subcoefs);
-			var tempArray = new Array();
 			
+			mathmlRecalculo(this,'manip', subcons);
+						
 			//MULTIPLICA PELO COEFICIENTE DA VARIAVEL QUE SAIU
+			var tempArray = new Array();
 			for (var i=0; i<this.funcao.coeficientes[index+1].length; i++) {
 				tempArray[i] = coef * this.funcao.coeficientes[index+1][i];
 			}
@@ -258,7 +272,7 @@ Folga.prototype.recalcular = function() {
 			var newCons = subcons * coef;
 			this.funcao.coeficientes.splice(index,1);
 			this.funcao.coeficientes.splice(index,1,tempArray);
-			
+				
 			tempArray = [];
 			tempArray = this.funcao.variaveis[index].slice(0,this.funcao.variaveis[index].length);
 			this.funcao.variaveis.splice(index,1);
@@ -269,7 +283,9 @@ Folga.prototype.recalcular = function() {
 			this.funcao.coeficientes.splice(index,1);
 			tempArray = tempArray.concat(this.funcao.coeficientes);
 			this.funcao.coeficientes = tempArray;
-		
+			
+			mathmlRecalculo(this,'final', newCons);
+			
 			var tempCoef=[];
 			var tempVars=[];
 			var soma = 0;
@@ -313,22 +329,20 @@ Folga.prototype.recalcular = function() {
 			
 			this.funcao.coeficientes = tempCoef;
 			this.funcao.variaveis = tempVars;
-			/*console.log(this.variavel +' = ');
-			console.log(this.funcao.constante);
-			console.log(this.funcao.coeficientes);
-			console.log(this.funcao.variaveis);
-			console.log("-----------");*/
-		} else {
-			/*console.log(this.variavel +' = ');
-			console.log(this.funcao.constante);
-			console.log(this.funcao.coeficientes);
-			console.log(this.funcao.variaveis);
-			console.log("-----------");*/
+			
+			mathmlRecalculo(this,'final');
 		}
-	} else {
+	}
+	//se foi passado apenas os variaveis que in e out - RECALCULO DA PRINCIPAL
+	else {
+		var iteracao = arguments[2];
+		//mathml da equação inicial sem a manipulação
+		mathmlRecalculo(this,'inicial',iteracao);
+		
 		var sai = arguments[0];
 		var entra = arguments[1];
 		var aux = [];
+		var dec = false;
 		
 		if(sai!=this.variavel){return alert("Erro.");}
 		
@@ -348,6 +362,8 @@ Folga.prototype.recalcular = function() {
 		
 		aux[0] = aux[0]*(-1);
 		
+		var fim = mathmlRecalculo(this, aux[0], iteracao); //MONTAR O MATHML PASSANDO A FUNCAO E O COEFICIENTE DA VARIAVEL QUE ENTROU
+		
 		var lhs = aux[0];
 		var rhs = this.funcao.coeficientes;
 		
@@ -356,14 +372,11 @@ Folga.prototype.recalcular = function() {
 		}
 		this.funcao.coeficientes = new Array();
 		this.funcao.coeficientes = rhs;
-		
 		this.funcao.constante = this.funcao.constante / lhs;
-
-		/*console.log(this.variavel + " = ");
-		console.log(this.funcao.constante);
-		console.log(this.funcao.coeficientes);
-		console.log(this.funcao.variaveis);
-		console.log("-----------");*/
+		
+		if(fim == false){
+			mathmlRecalculo(this,'final','style');
+		}
 	
 	}
 	
@@ -469,14 +482,14 @@ Dicionario.prototype.analise_ff = function() {
 	var temp2 = null;
 	var maiorRestricao = 999;
 	var iteracao = arguments[0];
-		
+
 	//PRINTA OS ELEMENTOS DA ESTRUTURA HTML
-	$("<DIV></DIV>").attr("id","afr_"+iteracao+"").appendTo(".wrap");
-	$("<SECTION>Análise de Forças Restritivas - "+iteracao+"ª Iteração</SECTION>").appendTo("#afr_"+iteracao+"");
+	//$("<DIV></DIV>").attr("id","afr_"+iteracao+"").appendTo(".wrap");
+	//$("<SECTION>Análise de Forças Restritivas - "+iteracao+"ª Iteração</SECTION>").appendTo("#afr_"+iteracao+"");
 
 	//CALCULA A FORÇA RESTRITIVA DE CADA EQUACAO
 	for (var i=0; i<folga.length; i++) {
-		$("<DIV CLASS='afrs'></DIV>").appendTo("#afr_"+iteracao+"");
+		//$("<DIV CLASS='afrs'></DIV>").appendTo("#afr_"+iteracao+"");
 		temp[i] = folga[i].forcaRestritiva(entra, folga[i].variavel);
 		
 		if (temp[i]>0 && temp[i] < maiorRestricao){
@@ -484,14 +497,18 @@ Dicionario.prototype.analise_ff = function() {
 			temp2 = folga[i].variavel;
 		}
 	}
-		
+	
 	this.maiorRestricao.variavel = temp2;
 }
 
 Dicionario.prototype.recalculoEquacoes = function() {
+	var iteracao = arguments[0];
 	var base = new Array();
 	var entra = this.funcaoObjetivo.maior.variavel;
 	var sai = this.maiorRestricao.variavel;
+	
+	console.log('ENTRA = '+entra);
+	console.log('SAI = '+sai);
 	
 	for (var i=0; i<this.funcaoFolga.length;i++){
 		base[i] = this.funcaoFolga[i].variavel;
@@ -499,8 +516,11 @@ Dicionario.prototype.recalculoEquacoes = function() {
 			var aux = i;
 		}
 	}
+	
+	//montaMatmlRecalculoPrincipal(this.funcaoFolga[aux]);
+	
 	//recalculo da principal
-	this.funcaoFolga[aux].recalcular(sai, entra);
+	this.funcaoFolga[aux].recalcular(sai, entra,iteracao);
 	
 	var funcao = {
 				variavel : this.funcaoFolga[aux].variavel,
@@ -508,16 +528,18 @@ Dicionario.prototype.recalculoEquacoes = function() {
 				variaveis : this.funcaoFolga[aux].funcao.variaveis,
 				coeficientes : this.funcaoFolga[aux].funcao.coeficientes
 			};
-			
+	
 	//recalculo das demais
 	for (var i=0;i<this.funcaoFolga.length;i++){
 		if (i!=aux) {
-			this.funcaoFolga[i].recalcular(funcao);
+			this.funcaoFolga[i].recalcular(funcao, iteracao);
+			//criarRecalculo(this.funcaoFolga[i], iteracao); //
+			//montaMathML(this.funcaoFolga[i]);
 		}
 	}
 	
-	//recaulculo da funcao objetivo
-	this.funcaoObjetivo.recalcular(funcao);
+	//recalculo da funcao objetivo
+	this.funcaoObjetivo.recalcular(funcao, iteracao);
 }
 
 Dicionario.prototype.setMaxZ = function(){
