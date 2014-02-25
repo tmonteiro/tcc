@@ -8,11 +8,11 @@ function FuncaoObjetivo() {
 		coeficientes : new Array(),
 		variaveis : new Array(),
 		constante : null
-		};
+	};
 	this.maior = {
 		coeficiente: new Number(),
 		variavel: new String()
-		};
+	};
 }
 
 FuncaoObjetivo.prototype.setTipo = function(inString) {
@@ -331,12 +331,6 @@ Folga.prototype.recalcular = function() {
 			this.funcao.variaveis = tempVars;
 			
 			mathmlRecalculo(this,'final');
-		} else {
-			/*console.log(this.variavel +' = ');
-			console.log(this.funcao.constante);
-			console.log(this.funcao.coeficientes);
-			console.log(this.funcao.variaveis);
-			console.log("-----------");*/
 		}
 	}
 	//se foi passado apenas os variaveis que in e out - RECALCULO DA PRINCIPAL
@@ -368,35 +362,21 @@ Folga.prototype.recalcular = function() {
 		
 		aux[0] = aux[0]*(-1);
 		
-		mathmlRecalculo(this, aux[0], iteracao); //MONTAR O MATHML PASSANDO A FUNCAO E O COEFICIENTE DA VARIAVEL QUE ENTROU
+		var fim = mathmlRecalculo(this, aux[0], iteracao); //MONTAR O MATHML PASSANDO A FUNCAO E O COEFICIENTE DA VARIAVEL QUE ENTROU
 		
 		var lhs = aux[0];
 		var rhs = this.funcao.coeficientes;
 		
 		for (var i=0; i<rhs.length; i++){
 			rhs[i] = rhs[i]/lhs;
-			if(parseFloat(rhs[i]) != parseInt(rhs[i])){
-				dec = true
-			} 
 		}
 		this.funcao.coeficientes = new Array();
 		this.funcao.coeficientes = rhs;
-		
 		this.funcao.constante = this.funcao.constante / lhs;
 		
-		if(parseFloat(this.funcao.constante) == parseInt(this.funcao.constante)){
-			dec = false
-		} 
-		
-		//if(lhs != 1 && !(dec)){
+		if(fim == false){
 			mathmlRecalculo(this,'final','style');
-		//}
-		
-		//var frac = toFrac(roundSigDig(this.funcao.constante,15) , 1000, .000000001);
-		//var check = checkString(frac,"/",true);
-		//if((check < 0) && lhs != 1) {
-		//	mathmlRecalculo(this, 'final');
-		//}
+		}
 	
 	}
 	
@@ -502,14 +482,14 @@ Dicionario.prototype.analise_ff = function() {
 	var temp2 = null;
 	var maiorRestricao = 999;
 	var iteracao = arguments[0];
-		
+
 	//PRINTA OS ELEMENTOS DA ESTRUTURA HTML
-	$("<DIV></DIV>").attr("id","afr_"+iteracao+"").appendTo(".wrap");
-	$("<SECTION>Análise de Forças Restritivas - "+iteracao+"ª Iteração</SECTION>").appendTo("#afr_"+iteracao+"");
+	//$("<DIV></DIV>").attr("id","afr_"+iteracao+"").appendTo(".wrap");
+	//$("<SECTION>Análise de Forças Restritivas - "+iteracao+"ª Iteração</SECTION>").appendTo("#afr_"+iteracao+"");
 
 	//CALCULA A FORÇA RESTRITIVA DE CADA EQUACAO
 	for (var i=0; i<folga.length; i++) {
-		$("<DIV CLASS='afrs'></DIV>").appendTo("#afr_"+iteracao+"");
+		//$("<DIV CLASS='afrs'></DIV>").appendTo("#afr_"+iteracao+"");
 		temp[i] = folga[i].forcaRestritiva(entra, folga[i].variavel);
 		
 		if (temp[i]>0 && temp[i] < maiorRestricao){
