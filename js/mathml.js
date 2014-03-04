@@ -5,7 +5,7 @@ function criarPPL(problema){
 	$("div#inicial div.problema").append(mathml);
 	$("div#inicial div.problema").append("<br /><math><mtext mathsize='normal' class='sujeito'>Sujeito a</mtext></math><br />");
 		
-	for (var i = 1; i<=problema.restricoes.length; i++){ //MathML Restrições
+	for (var i = 1; i<=problema.restricoes.length; i++){ //MathML Restriï¿½ï¿½es
 		mathml = montaMathML(problema.restricoes[i-1],'rest');
 		$("div#inicial div.problema").append("<span>"+mathml+"</span><br />");
 	}
@@ -30,7 +30,7 @@ function montaMathML(funcao, local){
 				mathml = '<math><msub><mi>'+x.charAt(0)+'</mi><mn>'+x.charAt(1)+'</mn></msub><mo>=</mo>';
 				
 				var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
-				var check = checkString(frac,"/",true);  //verificar se é uma fração
+				var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 				if (check > 0) {
 					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 				} else {
@@ -41,7 +41,7 @@ function montaMathML(funcao, local){
 				mathml = '<math><mi>Z</mi><mo>=</mo>';
 				if (funcao.funcao.constante != null){
 					var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
-					var check = checkString(frac,"/",true);  //verificar se é uma fração
+					var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 					if (check > 0) {
 						mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 					} else {
@@ -51,7 +51,7 @@ function montaMathML(funcao, local){
 			}else if (local == 'rec2'){
 				if (funcao.funcao.constante != null){
 					var frac = funcao.funcao.constante;
-					var check = checkString(frac,"/",true);  //verificar se é uma fração
+					var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 					if (check > 0) {
 						mathml = '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 					} else {
@@ -69,7 +69,7 @@ function montaMathML(funcao, local){
 			//************************//
 			if (arguments[2] != null){ /* quando eu tiver 2 constantes na funcao, geralmente durante o recalculo*/
 				var frac = toFrac(roundSigDig(arguments[2],15) , 1000, .000000001);
-				var check = checkString(frac,"/",true);  //verificar se é uma fração
+				var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 				var sinal = frac.toString().charAt(0);
 				
 				if (sinal == "-"){
@@ -97,15 +97,15 @@ function montaMathML(funcao, local){
 			} else {
 				var frac = toFrac(roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
 			}
-			var check = checkString(frac,"/",true);  //verificar se é uma fração
-			var sinal = frac.toString().charAt(0);	 //verificar se é negativo
+			var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
+			var sinal = frac.toString().charAt(0);	 //verificar se ï¿½ negativo
 			var elemento = "elemento"+i+"";
 			
-			if (check > 0){ //fração
+			if (check > 0){ //fraï¿½ï¿½o
 				var fracao = {numerador: "", denominador: ""};
 				fracao.denominador = frac.substring(check+1, frac.length);
 
-				if (sinal == "-") { //fração negativa
+				if (sinal == "-") { //fraï¿½ï¿½o negativa
 					fracao.numerador = frac.substring(1,check);
 					mathml += '<mo>-</mo>';
 				}else{ //frqacao positiva
@@ -145,7 +145,7 @@ function montaMathML(funcao, local){
 			
 			if (local == 'manip' && funcao.funcao.constante != null && i==1){
 				var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
-					var check = checkString(frac,"/",true);  //verificar se é uma fração
+					var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 					if (check > 0) {
 						mathml = '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 					} else {
@@ -160,8 +160,8 @@ function montaMathML(funcao, local){
 			}
 			
 			//var frac = toFrac (roundSigDig(funcao.funcao.coeficientes[i-1],15) , 1000, .000000001);
-			var check = checkString(frac,"/",true);  //verificar se é uma fração
-			var sinal = frac.toString().charAt(0);	 //verificar se é negativo
+			var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
+			var sinal = frac.toString().charAt(0);	 //verificar se ï¿½ negativo
 			var elemento = "elemento"+i+"";
 		
 			if (check > 0){ //SE FOR UMA FRACAO
@@ -238,7 +238,7 @@ function criarMathDic(dicionario,iteracao){
 		}
 	}
 	
-	// Restrições de não negatividade
+	// Restriï¿½ï¿½es de nï¿½o negatividade
 	mathml = naoNeg(dicionario.restricoesNn);
 	if(iteracao == 0){
 		$("div#inicial div.dicionario").append('<span>'+mathml+'</span><br />');
@@ -261,7 +261,7 @@ function criarMathDic(dicionario,iteracao){
 		$('#it'+iteracao+' .dicionario').append('<br /><span>'+mathml+'</span><br />');
 	}
 	
-	// Z máximo
+	// Z mï¿½ximo
 	mathml = mathml_z_max(dicionario.maxZ);
 	if(iteracao == 0){
 		$("div#inicial div.dicionario").append('<br /><span>'+mathml+'</span><br />');
@@ -323,9 +323,9 @@ function montaMatmlRecalculoDemais(){
 	var mathml;
 	var aux = new Folga();
 	
-	//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA É UMA FRAÇÃO
+	//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA ï¿½ UMA FRAï¿½ï¿½O
 	var frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
-	var check = checkString(frac,"/",true);  //verificar se é uma fração
+	var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 	mathml = '<math><mn>'+frac+'<mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
 	
 	mathml += montaMathML(funcao, 'rec2');
@@ -432,7 +432,7 @@ function mathmlRecalculo(){
 				mathml = monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inCoefFrac);
 				$('.rec_eq').last().append('<div>'+mathml+'</div>');
 			}else		
-				/****** PASSANDO O COEFICIENTE PARA A DIVISÃO *****/
+				/****** PASSANDO O COEFICIENTE PARA A DIVISï¿½O *****/
 				if(inCoef !=0 && inCoef != 1){
 					for(var i=0;i<funcao.funcao.variaveis.length;i++){
 						aux.funcao.coeficientes[i] = funcao.funcao.coeficientes[i] +'/'+ inCoef;
@@ -527,14 +527,14 @@ function mathmlRecalculoFo(){
 
 function monta_mathml_rec_padrao(funcao) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -546,7 +546,7 @@ function monta_mathml_rec_padrao(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -579,7 +579,7 @@ function monta_mathml_rec_padrao(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -616,7 +616,7 @@ function monta_mathml_rec_padrao(funcao) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -628,14 +628,14 @@ function monta_mathml_rec_padrao(funcao) {
 
 function monta_mathml_rec_padrao_style(funcao) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -647,7 +647,7 @@ function monta_mathml_rec_padrao_style(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -680,7 +680,7 @@ function monta_mathml_rec_padrao_style(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -719,7 +719,7 @@ function monta_mathml_rec_padrao_style(funcao) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -731,15 +731,15 @@ function monta_mathml_rec_padrao_style(funcao) {
 
 function monta_mathml_rec_duas_const(funcao) { 
 	//alert('mathml.monta_mathml_rec02');
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var cons2 = arguments[1];
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -751,7 +751,7 @@ function monta_mathml_rec_duas_const(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -781,7 +781,7 @@ function monta_mathml_rec_duas_const(funcao) {
 		frac = toFrac(roundSigDig(cons2,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -816,7 +816,7 @@ function monta_mathml_rec_duas_const(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -850,7 +850,7 @@ function monta_mathml_rec_duas_const(funcao) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -862,20 +862,20 @@ function monta_mathml_rec_duas_const(funcao) {
 
 function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
 	
 	frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
-	check = checkString(frac,"/",true);  //verificar se é uma fração
+	check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 	
 	if (check > 0) {
 		switch(frac.charAt(0)){
@@ -918,7 +918,7 @@ function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -953,7 +953,7 @@ function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -992,7 +992,7 @@ function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -1007,14 +1007,14 @@ function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 
 function monta_mathml_rec_principal_terceira_etapa(funcao) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	var fim = arguments[1];
 	/* ********************************************************************************************************************* */
 	
@@ -1028,7 +1028,7 @@ function monta_mathml_rec_principal_terceira_etapa(funcao) {
 		//frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(cons,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(cons.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1061,7 +1061,7 @@ function monta_mathml_rec_principal_terceira_etapa(funcao) {
 		//frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(coef[i],"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(coef[i].charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -1098,7 +1098,7 @@ function monta_mathml_rec_principal_terceira_etapa(funcao) {
 			
 		}
 		
-		if (coef[i] != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (coef[i] != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -1111,14 +1111,14 @@ function monta_mathml_rec_principal_terceira_etapa(funcao) {
 
 function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -1130,7 +1130,7 @@ function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1165,7 +1165,7 @@ function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -1211,7 +1211,7 @@ function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 		}
 		
 			
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -1223,14 +1223,14 @@ function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 
 function monta_mathml_rec_padrao(funcao) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -1242,7 +1242,7 @@ function monta_mathml_rec_padrao(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1275,7 +1275,7 @@ function monta_mathml_rec_padrao(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -1312,7 +1312,7 @@ function monta_mathml_rec_padrao(funcao) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -1331,7 +1331,7 @@ function monta_mathml_rec_subst(){
 	
 	mathml += '<msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
 	var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
-	var check = checkString(frac,"/",true);  //verificar se é uma fração
+	var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
 	if (check > 0) {
 			mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 	} else {
@@ -1378,14 +1378,14 @@ function monta_mathml_rec_subst(){
 
 function monta_mathml_rec_subst_part(funcao) {
 	//alert('mathml.monta_mathml_rec02');
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	//var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -1397,7 +1397,7 @@ function monta_mathml_rec_subst_part(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1431,7 +1431,7 @@ function monta_mathml_rec_subst_part(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -1465,7 +1465,7 @@ function monta_mathml_rec_subst_part(funcao) {
 			
 		}
 		
-		if (frac != 0 && vars[i] != null) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0 && vars[i] != null) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -1477,13 +1477,13 @@ function monta_mathml_rec_subst_part(funcao) {
 
 function monta_mathml_rec_obj_padrao(funcao) {
 
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math><mi>Z</mi><mo>=</mo>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -1495,7 +1495,7 @@ function monta_mathml_rec_obj_padrao(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1528,7 +1528,7 @@ function monta_mathml_rec_obj_padrao(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -1568,7 +1568,7 @@ function monta_mathml_rec_obj_padrao(funcao) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
@@ -1662,15 +1662,15 @@ function monta_mathml_rec_obj_subst(){
 
 function monta_mathml_rec_obj_duas_const(funcao) {
 	//alert('mathml.monta_mathml_rec02');
-	/* ********************************************DECLARAÇÃO DAS VARIAVEIS *********************************************** */
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
 	//var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
 	var cons = funcao.funcao.constante;
 	var cons2 = arguments[1];
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math><mi>Z</mi><mo>=</mo>';
-	var frac = ''; //variavel usada para tranformar o decimal em fração
-	var check=''; // variavel para verificar se frac é uma fracão ou numero inteiro
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 	/* ********************************************************************************************************************* */
 	
 	/* *************************************************** LHS DA FUNCAO *************************************************** */
@@ -1682,7 +1682,7 @@ function monta_mathml_rec_obj_duas_const(funcao) {
 		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1712,7 +1712,7 @@ function monta_mathml_rec_obj_duas_const(funcao) {
 		frac = toFrac(roundSigDig(cons2,15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // negativo
@@ -1749,7 +1749,7 @@ function monta_mathml_rec_obj_duas_const(funcao) {
 		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENTÃO É UMA FRAÇÃO
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
 		
 			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
 				case '-':  // NEGATIVO
@@ -1786,12 +1786,485 @@ function monta_mathml_rec_obj_duas_const(funcao) {
 			
 		}
 		
-		if (frac != 0) { // só mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
 		
 	}
 	/* *********************************************************************************************************************** */	
+	mathml += '</math>';
+	return(mathml);
+}
+
+function mathml_afr(){
+    var aux  = arguments[0];
+    for(var i=0; i<aux.length; i++){
+        for (var j=1; j<aux[i].length; j++){
+            switch(aux[i][j].tipo){
+                case 'inicial':
+                    var iteracao = aux[i][j].iteracao;
+                    $('#it'+iteracao+' > .analise_fr').append('<div class="afr" style="margin-bottom:20px"></div>');
+                    /*
+                    var xn = arguments[0]; // NOME DA FUNCAO -- (X4 = ) 
+                    var cons = arguments[1];
+                    var coef = arguments[2];
+                    var inVar = arguments[3];*/
+                    var mathml = monta_mathml_afr(aux[i][j].lhs,aux[i][j].cons,aux[i][j].rhs,aux[i][j].inVar);
+                    $('.afr').last().append('<div>'+mathml+'</div>');
+                break;
+                case 'second':	//'second',lhs,inVar.variavel,rhs
+                    var style = false;
+                    if (j==aux[i].length-1 && aux[i][0] == 'maior_restricao'){
+                        style = true;
+                    }
+                    var inCoef = aux[i][j].lhs;
+                    var inVar  = aux[i][j].inVar;
+                    var rhs    = aux[i][j].rhs;
+                    var sinal  = aux[i][j].sinal;
+                    var mathml = monta_mathml_afr_second(inCoef,inVar,rhs,sinal,style);
+                    $('.afr').last().append('<div>'+mathml+'</div>');
+                break;
+                case 'third':	//'third',lhs,inVar.variavel,rhs,sinal
+                    var style = false;
+                    if (j==aux[i].length-1 && aux[i][0] == 'maior_restricao'){
+                        style = true;
+                    }
+                    var lhs = aux[i][j].lhs; //1.5
+                    var rhs = aux[i][j].rhs;
+                    var inVar = aux[i][j].inVar;
+                    var sinal = aux[i][j].sinal;
+
+                    var lhsFrac = toFrac(roundSigDig(lhs,15) , 1000, .000000001)
+                    var check = checkString(lhsFrac,"/",true);
+                    if(check > 0){
+                        var mathml = monta_mathml_afr_third_denfrac(inVar,lhsFrac,rhs,sinal,style);
+                        $('.afr').last().append('<div>'+mathml+'</div>');
+                    }else{
+						var frac = rhs + '/' + lhs;
+						var mathml = monta_mathml_afr_third(inVar,frac,sinal,style);
+						$('.afr').last().append('<div>'+mathml+'</div>');
+                    }
+
+                    
+                break;
+                case 'fourth':    //'fourth',inVar.variavel,result,sinal
+                    var inVar = aux[i][j].inVar;
+                    var result = aux[i][j].result;
+                    var sinal = aux[i][j].sinal;
+                    var style = false;
+                    if (j==aux[i].length-1 && aux[i][0] == 'maior_restricao'){
+                        style = true;
+                    }
+                    var mathml = monta_mathml_afr_fourth(inVar,sinal,result,style);
+                    $('.afr').last().append('<div>'+mathml+'</div>');
+                break;
+            }
+        }
+    }
+}
+
+function monta_mathml_afr(){
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
+	var xn = arguments[0]; /* NOME DA FUNCAO -- (X4 = ) */
+	var cons = arguments[1];
+	var coef = arguments[2];
+	var inVar = arguments[3];
+	var mathml = '<math>';
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
+	/* ********************************************************************************************************************* */
+	
+	/* *************************************************** LHS DA FUNCAO *************************************************** */
+	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
+	/* ********************************************************************************************************************* */
+	
+	/* *************************************************** CONSTANTE ******************************************************* */
+	if (cons != null) {
+		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
+		check = checkString(frac,"/",true);
+		
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+		
+			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+				case '-':  // negativo
+					mathml += '<mo>-</mo>'
+					mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+				break;
+				default: // positivo
+					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			}
+			
+		} else { // CHECK < ZERO =  NUMERO INTEIRO 
+		
+			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+				case '-':  // negativo
+					mathml += '<mo>-</mo>'
+					mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+				break;
+				default: // positivo
+					mathml += '<mn>'+frac+'</mn>';
+			}
+		}
+		
+	}
+	/* *********************************************************************************************************************** */
+	
+	/* ******************************************** COEFICIENTE E VARIAVEL  ************************************************ */
+	//for (var i=0; i<coef.length; i++) {
+		frac = toFrac(roundSigDig(coef,15) , 1000, .000000001);
+		check = checkString(frac,"/",true);
+		
+		if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+		
+			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+				case '-':  // NEGATIVO
+					mathml += '<mo>-</mo>';
+					mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+				break;
+				default: // POSITIVO
+					if(cons != null || cons != undefined){ // SE A FUNCAO TIVER CONSTANTE DEVE-SE APRESENTAR O SINAL POSITIVO
+						mathml += '<mo>+</mo>';
+					}
+					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			}
+			
+		} else { // CHECK < ZERO =  NUMERO INTEIRO 
+		
+			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+				case '-':  // NEGATIVO
+					mathml += '<mo>-</mo>'
+					if ((frac != -1) && (frac != 0)) {
+						mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+					}
+				break;
+				default: // POSITIVO
+					// SE FOR O PRIMEIRO ELEMENTO E A FUNCAO TIVER CONSTANTE DEVE-SE APRESENTAR O SINAL POSITIVO OU SE FOR OS OUTROS ELEMENTOS  TBM DEVE APRESENTAR O POSITIVO
+					if( ((i==0) && (cons != null || cons != undefined)) || i!=0 || !( (i==0) && (cons==null || cons==undefined ) )){ 
+						mathml += '<mo>+</mo>';
+						if ((frac != 1) && (frac != 0)) {
+							mathml += '<mn>'+frac+'</mn>';
+						}
+					}
+			}
+			
+		}
+		
+		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
+			mathml += '<msub><mi>'+inVar.charAt(0)+'</mi><mn>'+inVar.charAt(1)+'</mn></msub>';
+		}
+		
+	//}
+	/* *********************************************************************************************************************** */	
+	mathml += '<mo>&ge;</mo><mn>0</mn></math>';
+	return(mathml);
+}
+
+function monta_mathml_afr_second(){
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
+	var inCoef = arguments[0];
+	var inVar = arguments[1];
+	var rhs   = arguments[2];
+	var sinal = arguments[3];
+	var style = arguments[4];
+	//var coef = arguments[2];
+	//var inVar = arguments[3];
+	var mathml = '<math>';
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
+	/* ********************************************************************************************************************* */
+	
+	if(style == true){
+        mathml += '<mstyle mathcolor="red">';
+    }
+	
+	/* *************************************************** LHS DA FUNCAO *************************************************** */
+	frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
+	check = checkString(frac,"/",true);
+	if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+		
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			break;
+			default: // positivo
+				mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+		}
+		
+	} else { // CHECK < ZERO =  NUMERO INTEIRO 
+	
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				if(frac!=-1){
+					mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+				}
+			break;
+			default: // positivo
+				if(frac!=1){
+					mathml += '<mn>'+frac+'</mn>';
+				}
+		}
+	}
+
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	if (sinal == 'ge') {
+		mathml += "<mo>&ge;</mo>";
+	}else if (sinal == 'le'){
+		mathml += "<mo>&le;</mo>"
+	}
+	/* ********************************************************************************************************************* */
+	
+	/* *************************************************** CONSTANTE ******************************************************* */
+	frac = toFrac(roundSigDig(rhs,15) , 1000, .000000001);
+	check = checkString(frac,"/",true);
+	if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+		
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			break;
+			default: // positivo
+				mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+		}
+		
+	} else { // CHECK < ZERO =  NUMERO INTEIRO 
+	
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+			break;
+			default: // positivo
+				mathml += '<mn>'+frac+'</mn>';
+		}
+	}
+	/* *********************************************************************************************************************** */	
+	
+	if(style == true){
+        mathml += '</mstyle>';
+    }
+	
+	mathml += '</math>';
+	return(mathml);
+}
+
+//inVar,rhs,sinal
+function monta_mathml_afr_third(){
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
+	var inVar = arguments[0];
+	var rhs   = arguments[1];
+	var sinal = arguments[2];
+	var style = arguments[3];
+	//var sinal = arguments[3];
+	//var coef = arguments[2];
+	//var inVar = arguments[3];
+	var mathml = '<math>';
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
+	/* ********************************************************************************************************************* */
+	
+	if(style == true){
+        mathml += '<mstyle mathcolor="red">';
+    }
+	
+	/* *************************************************** LHS DA FUNCAO *************************************************** */
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	if (sinal == 'ge') {
+		mathml += "<mo>&ge;</mo>";
+	}else if (sinal == 'le'){
+		mathml += "<mo>&le;</mo>"
+	}
+	/* ******************************************************************************************************************** */
+	
+	check = checkString(rhs,"/",true);
+	if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+		
+		switch(rhs.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mfrac><mn>'+rhs.substring(1,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+rhs.substring(check+1, rhs.length)+'</mn></mfrac>'; //DENOMIDADOR
+			break;
+			default: // positivo
+				mathml += '<mfrac><mn>'+rhs.substring(0,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+rhs.substring(check+1, rhs.length)+'</mn></mfrac>'; //DENOMIDADOR
+		}
+		
+	} else { // CHECK < ZERO =  NUMERO INTEIRO 
+	
+		switch(rhs.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				if(rhs!=-1){
+					mathml += '<mn>'+rhs.substring(1,rhs.length)+'</mn>';
+				}
+			break;
+			default: // positivo
+				if(rhs!=1){
+					mathml += '<mn>'+rhs+'</mn>';
+				}
+		}
+	}
+	/* ********************************************************************************************************************* */
+	if(style == true){
+		mathml += '</mstyle>';
+	}
+	mathml += '</math>';
+	return(mathml);
+}
+
+//monta_mathml_afr_third(inVar,lhsFrac,rhs,sinal,style);
+function monta_mathml_afr_third_denfrac(){
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
+	var inVar   = arguments[0]; /* NOME DA FUNCAO -- (X4 = ) */
+	var lhsFrac = arguments[1];
+	var rhs 	= arguments[2];
+	var sinal   = arguments[3];
+	var style   = arguments[4];
+	var mathml  = '<math>';
+	var frac 	= ''; 			//variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check	=''; 			// variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
+	/* ********************************************************************************************************************* */
+	
+	if(style == true){
+        mathml += '<mstyle mathcolor="red">';
+    }
+	
+	/* *************************************************** LHS DA FUNCAO *************************************************** */
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	if (sinal == 'ge') {
+		mathml += "<mo>&ge;</mo>";
+	}else if (sinal == 'le'){
+		mathml += "<mo>&le;</mo>"
+	}
+	/* ********************************************************************************************************************* */
+	
+	/* *************************************************** CONSTANTE ******************************************************* */
+	
+	frac = toFrac(roundSigDig(rhs,15) , 1000, .000000001);
+	check = checkString(frac,"/",true);
+	
+	if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+	
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mfrac>';
+				mathml += '<mfrac bevelled="true"><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			break;
+			default: // positivo
+				mathml += '<mfrac>';
+				mathml += '<mfrac bevelled="true"><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+		}
+		
+	} else { // CHECK < ZERO =  NUMERO INTEIRO 
+	
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mfrac>';
+				mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+			break;
+			default: // positivo
+				mathml += '<mfrac>';
+				mathml += '<mn>'+frac+'</mn>';
+		}
+	}
+		
+
+	check = checkString(lhsFrac,"/",true);
+	
+	if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+	
+		switch(lhsFrac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // NEGATIVO
+				mathml += '<mo>-</mo>';
+				mathml += '<mfrac bevelled="true"><mn>'+lhsFrac.substring(1,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+lhsFrac.substring(check+1, lhsFrac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			break;
+			default: // POSITIVO
+				mathml += '<mfrac bevelled="true"><mn>'+lhsFrac.substring(0,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+lhsFrac.substring(check+1, lhsFrac.length)+'</mn></mfrac>'; //DENOMIDADOR
+		}
+	}
+	/* *********************************************************************************************************************** */	
+	if(style == true){
+        mathml += '</mstyle>';
+    }
+	mathml += '</mfrac></math>';
+	return(mathml);
+}
+
+function monta_mathml_afr_fourth(){
+	/* ********************************************DECLARAï¿½ï¿½O DAS VARIAVEIS *********************************************** */
+	var inVar = arguments[0];
+	var result = arguments[2];
+	var sinal = arguments[1];
+    var style = arguments[3];
+	//var sinal = arguments[3];
+	//var coef = arguments[2];
+	//var inVar = arguments[3];
+	var mathml = '<math>';
+	var frac = ''; //variavel usada para tranformar o decimal em fraï¿½ï¿½o
+	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
+	/* ********************************************************************************************************************* */
+	
+    if(style == true){
+        mathml += '<mstyle mathcolor="red">';
+    }
+    
+	/* *************************************************** LHS DA FUNCAO *************************************************** */
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	if (sinal == 'ge') {
+		mathml += "<mo>&ge;</mo>";
+	} else if (sinal == 'le') {
+		mathml += "<mo>&le;</mo>";
+	}
+	/* ******************************************************************************************************************** */
+	frac = toFrac(roundSigDig(result,15) , 1000, .000000001);
+	check = checkString(frac,"/",true);
+	if (check > 0) { // SE CHECK > ZERO ENTï¿½O ï¿½ UMA FRAï¿½ï¿½O
+		
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+			break;
+			default: // positivo
+				mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
+				mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+		}
+		
+	} else { // CHECK < ZERO =  NUMERO INTEIRO 
+	
+		switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+			case '-':  // negativo
+				mathml += '<mo>-</mo>'
+				if(frac!=-1){
+					mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
+				}
+			break;
+			default: // positivo
+				mathml += '<mn>'+frac+'</mn>';
+		}
+	}
+	/* ********************************************************************************************************************* */
+    if(style == true){
+        mathml += '</mstyle>';
+    }
 	mathml += '</math>';
 	return(mathml);
 }

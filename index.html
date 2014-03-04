@@ -101,7 +101,7 @@
 					$('ul.tabs').append('<li><a href="#it'+iteracao+'"> '+iteracao+'ª Iteração</a></li>');
 
 					//ANALISE DAS FORCAS RESTRITIVAS
-					//$('#it'+iteracao+'').append('<div class="dicionario"><h4>Dicionario '+iteracao+'ª Iteração</h4></div>');
+					$('#it'+iteracao+'').append('<div class="analise_fr"><h4>Forças Restritivas '+iteracao+'ª Iteração</h4></div>');
 					dicionario.analise_ff(iteracao);
 					
 					//RECALCULO DAS EQUACOES
@@ -161,7 +161,6 @@
 	<!-- ========================== -->
 	<ul class='tabs'>
 		<li><a href='#inicial'>Inicial</a></li>
-		<!--<li><a href='#tab2'>Inicial</a></li>-->
 	</ul>
 
 	<div id='inicial' class='main'>
@@ -179,10 +178,6 @@
 		
 		<div class='footer'></div>
 	</div>
-	<!-- <div id='tab2' class='main' hidden>
-		<h3>Primeira Iteração</h3>
-	<div> -->
-	
 	<!-- ========================== -->
 		
 </body>

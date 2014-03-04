@@ -509,22 +509,3 @@ function shiftRight(theNumber, k) { //PASSA O NUMERO EX.: 4.5
         return (theNumber / k2)
     }
 }
-
-function mathmlafr(equacao, var_entra, sinal, aux) {
-	/* TAGS MATHML*/
-	var math = "<math display='inline'><msub><mi>"+equacao.lhs.toString().charAt(0)+"</mi><mn>"+equacao.lhs.toString().charAt(1)+"</mn></msub></math>";
-	var mrow = "<mrow></mrow>";
-	var mo = "<mo></mo>";
-	var mn = "<mn></mn>";
-	var msub = "";
-	/* --------- */
-	/*aux =1;*/
-	if (aux == 1) {
-		/*$("<SECTION>Análise de Forças Restritivas</SECTION>").appendTo(".wrap");*/
-		/*$(""+math+"").attr("id","teste").appendTo(".wrap");
-		msub = "<msub><mi>"+equacao.lhs.toString().charAt(0)+"</mi><mn>"+equacao.lhs.toString().charAt(1)+"</mn></msub>";
-		$(""+msub+"").appendTo("#teste");*/
-	}
-	
-	
-}

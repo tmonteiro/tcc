@@ -50,8 +50,8 @@ FuncaoObjetivo.prototype.verificarSolucao = function () {
 		}
 	}
 	if (neg.length == temp.length){
-		//NÃO EXISTEM VARIAVEIS QUE PODEM INCREMENTAR O Z
-		//alert (this.maxZ + "A solucao é ótima.");
+		//Nï¿½O EXISTEM VARIAVEIS QUE PODEM INCREMENTAR O Z
+		//alert (this.maxZ + "A solucao ï¿½ ï¿½tima.");
 		return 1;
 	}
 	return 0;
@@ -81,7 +81,7 @@ FuncaoObjetivo.prototype.recalcular = function(){
 		
 		if (index!= -1) {
 		
-			//mathml da funcaoObjetivo sem a manipulação
+			//mathml da funcaoObjetivo sem a manipulaï¿½ï¿½o
 			mathmlRecalculoFo(this,'fobjetivo', arguments[1]);
 			
 			this.funcao.variaveis.splice(index,1,subvars);
@@ -255,7 +255,7 @@ Folga.prototype.recalcular = function() {
 		
 		if (index!= -1) {
 			
-			//mathml da equação inicial sem a manipulação
+			//mathml da equaï¿½ï¿½o inicial sem a manipulaï¿½ï¿½o
 			mathmlRecalculo(this,'inicial', arguments[1]);
 				
 			this.funcao.variaveis.splice(index,1,subvars);
@@ -290,7 +290,7 @@ Folga.prototype.recalcular = function() {
 			var tempVars=[];
 			var soma = 0;
 			
-			/* Manipulacao algébrica */
+			/* Manipulacao algï¿½brica */
 			for (var i=0; i<this.funcao.variaveis.length;i++) {
 				var variavel = this.funcao.variaveis[i];
 				var coeficiente = this.funcao.coeficientes[i];
@@ -336,7 +336,7 @@ Folga.prototype.recalcular = function() {
 	//se foi passado apenas os variaveis que in e out - RECALCULO DA PRINCIPAL
 	else {
 		var iteracao = arguments[2];
-		//mathml da equação inicial sem a manipulação
+		//mathml da equaï¿½ï¿½o inicial sem a manipulaï¿½ï¿½o
 		mathmlRecalculo(this,'inicial',iteracao);
 		
 		var sai = arguments[0];
@@ -383,32 +383,54 @@ Folga.prototype.recalcular = function() {
 }
 
 Folga.prototype.forcaRestritiva = function() {
-	var entra = arguments[0];
-	var temp = this.funcao.variaveis.indexOf(entra.variavel);
-	var sinal;
-	
+	var inVar = arguments[0]; //VARIAVEL QUE VAI ENTRAR NA BASE
+	var temp = this.funcao.variaveis.indexOf(inVar.variavel);
+	var sinal = "ge";
 	var lhs = arguments[1]; //x4
 	var cons = this.funcao.constante;
 	var rhs = this.funcao.coeficientes[temp]; //
+	var iteracao = arguments[2];
+    var aux = [];
+    var y=0;
 	
-	sinal = "gte";
-	
-	var teste = { lhs: lhs, cons: cons, rhs:rhs };
-	
-	mathmlafr(teste, entra.variavel, sinal,1);
-	
+	//mathml_afr('inicial',iteracao,lhs,cons,rhs,inVar.variavel);
+    y++;
+    aux[y] = {tipo: 'inicial', iteracao: iteracao,lhs: lhs, cons: cons, rhs: rhs,inVar: inVar.variavel};
+    
+		
 	lhs = rhs;
 	rhs = cons*(-1);
 	
+	//mathml_afr('second',lhs,inVar.variavel,rhs,sinal);
+    y++;
+    aux[y] = {tipo: 'second',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
 	
 	if (lhs < 0) {
 		lhs = lhs*(-1);
 		rhs = rhs*(-1);
-		sinal = "lte";
+		sinal = "le";
+	//	mathml_afr('second',lhs,inVar.variavel,rhs,sinal);
+        y++;
+        aux[y] = {tipo: 'second',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
+	} 
+	
+	if (lhs != 1){
+	//	mathml_afr('third',lhs,inVar.variavel,rhs,sinal); //passa o lhs para divisao
+        y++;
+        aux[y] = {tipo: 'third',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
 	}
 	
-	var result = rhs/lhs;
-	return (result);
+	if(rhs % lhs != 0 || lhs == 1){
+		var result = rhs/lhs;
+	} else {
+		var result = rhs/lhs;
+	//	mathml_afr('fourth',inVar.variavel,result,sinal);
+        y++;
+        aux[y] = {tipo: 'fourth',inVar: inVar.variavel,result: result,sinal: sinal};
+	}
+    aux[0] = result;
+	
+	return (aux /*result*/);
 	
 }
 
@@ -478,27 +500,26 @@ Dicionario.prototype.analise_ff = function() {
 	var folga = this.funcaoFolga;
 	var fo = this.funcaoObjetivo;
 	var entra = fo.maior;
-	var temp = new Array();
+	var temp = [];
 	var temp2 = null;
+    var aux;
 	var maiorRestricao = 999;
 	var iteracao = arguments[0];
 
-	//PRINTA OS ELEMENTOS DA ESTRUTURA HTML
-	//$("<DIV></DIV>").attr("id","afr_"+iteracao+"").appendTo(".wrap");
-	//$("<SECTION>Análise de Forças Restritivas - "+iteracao+"ª Iteração</SECTION>").appendTo("#afr_"+iteracao+"");
-
-	//CALCULA A FORÇA RESTRITIVA DE CADA EQUACAO
+	//CALCULA A FORï¿½A RESTRITIVA DE CADA EQUACAO
 	for (var i=0; i<folga.length; i++) {
-		//$("<DIV CLASS='afrs'></DIV>").appendTo("#afr_"+iteracao+"");
-		temp[i] = folga[i].forcaRestritiva(entra, folga[i].variavel);
+		temp[i] = folga[i].forcaRestritiva(entra, folga[i].variavel,iteracao);
 		
-		if (temp[i]>0 && temp[i] < maiorRestricao){
-			maiorRestricao = temp[i];
+		if (temp[i][0] > 0 && temp[i][0] < maiorRestricao){
+			maiorRestricao = temp[i][0];
 			temp2 = folga[i].variavel;
-		}
+            aux = i;
+        }
+
 	}
-	
+    temp[aux][0] = 'maior_restricao';
 	this.maiorRestricao.variavel = temp2;
+    mathml_afr(temp);
 }
 
 Dicionario.prototype.recalculoEquacoes = function() {
@@ -507,17 +528,12 @@ Dicionario.prototype.recalculoEquacoes = function() {
 	var entra = this.funcaoObjetivo.maior.variavel;
 	var sai = this.maiorRestricao.variavel;
 	
-	console.log('ENTRA = '+entra);
-	console.log('SAI = '+sai);
-	
 	for (var i=0; i<this.funcaoFolga.length;i++){
 		base[i] = this.funcaoFolga[i].variavel;
 		if (base[i] == sai) {
 			var aux = i;
 		}
 	}
-	
-	//montaMatmlRecalculoPrincipal(this.funcaoFolga[aux]);
 	
 	//recalculo da principal
 	this.funcaoFolga[aux].recalcular(sai, entra,iteracao);
@@ -533,8 +549,6 @@ Dicionario.prototype.recalculoEquacoes = function() {
 	for (var i=0;i<this.funcaoFolga.length;i++){
 		if (i!=aux) {
 			this.funcaoFolga[i].recalcular(funcao, iteracao);
-			//criarRecalculo(this.funcaoFolga[i], iteracao); //
-			//montaMathML(this.funcaoFolga[i]);
 		}
 	}
 	
