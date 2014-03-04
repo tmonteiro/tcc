@@ -2,6 +2,7 @@
 body {
 	font-size: 62.5%; /* '10px padrão' */
 	width: 100%;
+	min-width: 920px;
 	background:#ccc;
 }
 .wrap {
