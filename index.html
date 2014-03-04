@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>PPL - Resolução Analítica</title>
 	<script src="js/jquery-1.9.1.min.js"></script>
-	<script src='js/jquery.autosize.js'></script>
+	<!--<script src='js/jquery.autosize.js'></script>-->
 	<script src="js/simplex3.0.js"></script>
 	<script src="js/objetos_2.js"></script> 
 	<script src="js/mathml.js"></script>
@@ -52,7 +52,7 @@
 			//========================//
 			
 			//======= AUTOSIZE =======//
-			$('.normal').autosize();
+			//$('.normal').autosize();
 			//========================//
 			
 			//========= EXEMPLO ========= //
@@ -149,7 +149,7 @@
 			}
 			//$("#inicial .formulario").hide();
 		}
-		
+	
 		function esconderTextBox(){
 			$("#inicial > form").hide();
 			$("#inicial #ha").show();
@@ -171,7 +171,7 @@
 			<div class="formulario">
 				<form>
 					<!--<label for="textarea">Insira o PPL:</label><br />-->
-					<textarea class="normal" id="input" cols="80" rows="10" name="textarea" style="width:300px; height: auto;" placeholder=""></textarea>
+					<textarea class="normal" id="input" name="textarea"  placeholder="INSIRA AQUI O PPL OU CLIQUE NO BOTÃO EXEMPLO"></textarea>
 				</form>
 				<button type="button" class="but" id="enviar">Enviar</button>
 				<button type="button" class="but" onclick="$('div#inicial textarea#input').val('')">Limpar</button>
