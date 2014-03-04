@@ -65,6 +65,7 @@
 			$('#enviar').on('click', function (){
 				var string = tratar_string($("textarea").val());
 				$('.formulario').hide();
+				
 				$('#inicial').append('<div class="problema"><h4>PPL</h4></div>');
 				$('#inicial').append('<div class="dicionario"><h4>Dicionario Inicial</h4></div>');
 
@@ -97,7 +98,7 @@
 						
 				while (solucao_otima !=1){
 					iteracao++;
-					$('body').append('<div id="it'+iteracao+'" class="main" hidden></div>');
+					$('.wrap').append('<div id="it'+iteracao+'" class="main" hidden></div>');
 					$('ul.tabs').append('<li><a href="#it'+iteracao+'"> '+iteracao+'ª Iteração</a></li>');
 
 					//ANALISE DAS FORCAS RESTRITIVAS
@@ -158,27 +159,28 @@
 	
 </head>
 <body>
-	<!-- ========================== -->
-	<ul class='tabs'>
-		<li><a href='#inicial'>Inicial</a></li>
-	</ul>
-
-	<div id='inicial' class='main'>
+	<div class="wrap">
 		<h3>Programação Linear - Resolução Analítica</h3>
-		<div class="formulario">
-			<form>
-				<label for="textarea">Insira o PPL:</label><br />
-				<textarea class="normal" id="input" cols="80" rows="10" name="textarea" style="width:300px; height: auto;" placeholder=""></textarea>
-			</form>
-			<br />
-			<button type="button" class="but" id="enviar">Enviar</button>
-			<button type="button" class="but" onclick="$('div#inicial textarea#input').val('')">Limpar</button>
-			<button type="button" class="but" id="exemplo">Exemplo</button>
+		<!-- ========================== -->
+		<ul class='tabs'>
+			<li><a href='#inicial' hidden>Inicial</a></li>
+		</ul>
+
+		<div id='inicial' class='main'>
+			
+			<div class="formulario">
+				<form>
+					<!--<label for="textarea">Insira o PPL:</label><br />-->
+					<textarea class="normal" id="input" cols="80" rows="10" name="textarea" style="width:300px; height: auto;" placeholder=""></textarea>
+				</form>
+				<button type="button" class="but" id="enviar">Enviar</button>
+				<button type="button" class="but" onclick="$('div#inicial textarea#input').val('')">Limpar</button>
+				<button type="button" class="but" id="exemplo">Exemplo</button>
+			</div>
+			
+			<div class='footer'></div>
 		</div>
-		
-		<div class='footer'></div>
+		<!-- ========================== -->
 	</div>
-	<!-- ========================== -->
-		
 </body>
 </html>

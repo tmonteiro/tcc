@@ -3,7 +3,7 @@
 function criarPPL(problema){
 	var mathml = montaMathML(problema.funcaoObjetivo);
 	$("div#inicial div.problema").append(mathml);
-	$("div#inicial div.problema").append("<br /><math><mtext mathsize='normal' class='sujeito'>Sujeito a</mtext></math><br />");
+	$("div#inicial div.problema").append("<br /><math><mtext class='mtext'>Sujeito a</mtext></math><br />");
 		
 	for (var i = 1; i<=problema.restricoes.length; i++){ //MathML Restri��es
 		mathml = montaMathML(problema.restricoes[i-1],'rest');
@@ -290,7 +290,7 @@ function mathml_conjunto_solucao(solucao){
 function mathml_z_max(z){
 	z = toFrac(roundSigDig(z,15) , 1000, .000000001);
 	var check = checkString(z,"/",true);
-	var mathml = '<math><mtext class="sujeito">Max</mtext><mspace width="5px"/><mi>Z</mi><mo>=</mo>';
+	var mathml = '<math><mtext class="mtext">Max</mtext><mspace width="5px"/><mi>Z</mi><mo>=</mo>';
 	if (check > 0) {
 		mathml += '<mfrac><mn>'+z.toString().substring(0,check)+'</mn><mn>'+z.toString().substring(check+1, z.lengh)+'</mn></mfrac>';
 	} else {
