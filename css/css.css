@@ -95,20 +95,20 @@ textarea {
 }
 
 h4 {
-	border-bottom: solid 0.2em #ccc;
+	border-bottom: solid 0.2em #666;
 	padding: 0.5em 0 0.5em 0 ;
 	margin: 0 0 0.5em 0 ;
 	font-size: 1.5em;
-	/*color: red;*/
+	color: #666;
 }
 
 
 .dicionario {
-	width:28%;
+	width:27%;
 	/*background:red;*/
 	float:left;
 } .dicionario math {
-	font-size: 3em;
+	font-size: 2em;
 }	
 
 .recalculo {
