@@ -393,44 +393,41 @@ Folga.prototype.forcaRestritiva = function() {
     var aux = [];
     var y=0;
 	
-	//mathml_afr('inicial',iteracao,lhs,cons,rhs,inVar.variavel);
-    y++;
-    aux[y] = {tipo: 'inicial', iteracao: iteracao,lhs: lhs, cons: cons, rhs: rhs,inVar: inVar.variavel};
-    
+	if (temp != -1){
+		y++;
+		aux[y] = {tipo: 'inicial', iteracao: iteracao,lhs: lhs, cons: cons, rhs: rhs,inVar: inVar.variavel};
+			
+		lhs = rhs;
+		rhs = cons*(-1);
 		
-	lhs = rhs;
-	rhs = cons*(-1);
-	
-	//mathml_afr('second',lhs,inVar.variavel,rhs,sinal);
-    y++;
-    aux[y] = {tipo: 'second',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
-	
-	if (lhs < 0) {
-		lhs = lhs*(-1);
-		rhs = rhs*(-1);
-		sinal = "le";
-	//	mathml_afr('second',lhs,inVar.variavel,rhs,sinal);
-        y++;
-        aux[y] = {tipo: 'second',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
-	} 
-	
-	if (lhs != 1){
-	//	mathml_afr('third',lhs,inVar.variavel,rhs,sinal); //passa o lhs para divisao
-        y++;
-        aux[y] = {tipo: 'third',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
+		y++;
+		aux[y] = {tipo: 'second',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
+		
+		if (lhs < 0) {
+			lhs = lhs*(-1);
+			rhs = rhs*(-1);
+			sinal = "le";
+			y++;
+			aux[y] = {tipo: 'second',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
+		} 
+		
+		if (lhs != 1){
+			y++;
+			aux[y] = {tipo: 'third',lhs: lhs,inVar: inVar.variavel,rhs: rhs,sinal: sinal};
+		}
+		
+		if(rhs % lhs != 0 || lhs == 1){
+			var result = rhs/lhs;
+		} else {
+			var result = rhs/lhs;
+			y++;
+			aux[y] = {tipo: 'fourth',inVar: inVar.variavel,result: result,sinal: sinal};
+		}
+		aux[0] = result;
+	}else {
+		aux = -1; // essa funcao não possui a variavel que entrará na base
 	}
-	
-	if(rhs % lhs != 0 || lhs == 1){
-		var result = rhs/lhs;
-	} else {
-		var result = rhs/lhs;
-	//	mathml_afr('fourth',inVar.variavel,result,sinal);
-        y++;
-        aux[y] = {tipo: 'fourth',inVar: inVar.variavel,result: result,sinal: sinal};
-	}
-    aux[0] = result;
-	
-	return (aux /*result*/);
+	return (aux);
 	
 }
 
@@ -510,7 +507,7 @@ Dicionario.prototype.analise_ff = function() {
 	for (var i=0; i<folga.length; i++) {
 		temp[i] = folga[i].forcaRestritiva(entra, folga[i].variavel,iteracao);
 		
-		if (temp[i][0] > 0 && temp[i][0] < maiorRestricao){
+		if (temp[i][0] > 0 && temp[i][0] < maiorRestricao && temp[i]!=-1){
 			maiorRestricao = temp[i][0];
 			temp2 = folga[i].variavel;
             aux = i;
