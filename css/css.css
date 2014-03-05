@@ -58,10 +58,8 @@ textarea {
 /* BOTÃO BÁSICO */
 
 .botoes{
-		width:100%;
-		//background-color: blue;
-		text-align:center;
-	}
+	width:100%;	
+}
 
 .but {
 	display: inline-block;
@@ -150,9 +148,11 @@ h4 {
 		font-size: 2em;
 	}
 	
+	.botoes {
+		text-align:center;
+	}
 	.but {
 		font-size: 2em;
 	}
-}
 	
 }
