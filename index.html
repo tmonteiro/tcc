@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>PPL - Resolução Analítica</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<script src="js/jquery-1.9.1.min.js"></script>
 	<!--<script src='js/jquery.autosize.js'></script>-->
 	<script src="js/simplex3.0.js"></script>
@@ -173,9 +174,11 @@
 					<!--<label for="textarea">Insira o PPL:</label><br />-->
 					<textarea class="normal" id="input" name="textarea"  placeholder="INSIRA AQUI O PPL OU CLIQUE NO BOTÃO EXEMPLO"></textarea>
 				</form>
-				<button type="button" class="but" id="enviar">Enviar</button>
-				<button type="button" class="but" onclick="$('div#inicial textarea#input').val('')">Limpar</button>
-				<button type="button" class="but" id="exemplo">Exemplo</button>
+				<div class="botoes">
+					<button type="button" class="but" id="enviar">Enviar</button>
+					<button type="button" class="but" onclick="$('div#inicial textarea#input').val('')">Limpar</button>
+					<button type="button" class="but" id="exemplo">Exemplo</button>
+				</div>
 			</div>
 			
 			<div class='footer'></div>
