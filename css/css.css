@@ -159,26 +159,27 @@ h4 {
 	}
 	.but {
 		font-size: 1.7em;
+		padding: 0.7em 1em;
 	}
 	
 	.problema {
 		width:100%;
 		margin: 0 0 2em 0;
 	} .problema math {
-		font-size: 2em;
+		font-size: 1.7em;
 	}
 	
 	.dicionario {
 		width:100%;
 	} .dicionario math {
-		font-size: 2em;
+		font-size: 1.7em;
 	}
 	.recalculo {
 		width: 100%;
 		float:left;
 		//margin: 0 0.5em 0 0;
 	}.recalculo math {
-		font-size: 2em;
+		font-size: 1.7em;
 	}	
 
 	.analise_fr{
@@ -186,7 +187,7 @@ h4 {
 		float:left;
 		//margin: 0 0 2em 0;
 	} .analise_fr math {
-		font-size: 2em;
+		font-size: 1.7em;
 	}
 	
 }
