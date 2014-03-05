@@ -47,7 +47,7 @@ div.main {
 
 .tabs a.active {
 	background:#fff;
-	color:#000;
+	color:#444;
 }
 
 textarea {
@@ -158,7 +158,7 @@ h4 {
 		text-align:center;
 	}
 	.but {
-		font-size: 1.8em;
+		font-size: 1.7em;
 	}
 	
 	.problema {
