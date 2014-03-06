@@ -19,10 +19,6 @@ function montaMathML(funcao, local){
 	var numCoef = funcao.funcao.coeficientes.length;
 	var mathml = '';
 	
-	/*if (local == 'manip'){
-		vars = vars + 1;
-	}*/
-	
 	for(var i = 1; i<=numCoef; i++){
 		if (i==1 && local != 'manip'){
 			if (local=='dicionario' || local=='recalculo' || local =='rec'){
@@ -186,7 +182,7 @@ function montaMathML(funcao, local){
 						mathml += '<mn>'+funcao.funcao.coeficientes[i-1].toString().substring(1,funcao.funcao.coeficientes[i-1].lengh)+'</mn>';
 					}
 					
-				}else{ // SE FOR UM NUMERO INTEIRO POSITIVO APRESENTA O SINAL DE POSITIVO
+				}else if (frac != 0){ // SE FOR UM NUMERO INTEIRO POSITIVO APRESENTA O SINAL DE POSITIVO
 					mathml += '<mo>+</mo>';
 
 					if(funcao.funcao.coeficientes[i-1] != "1"){ // SE FOR UM NUMERO INTEIRO POSITIVO = 1 OMITE O COEFICIENTE
@@ -194,7 +190,7 @@ function montaMathML(funcao, local){
 					}
 				}
 			}
-			if (typeof funcao.funcao.variaveis[i-1] != 'undefined') {
+			if (typeof funcao.funcao.variaveis[i-1] != 'undefined' && frac != 0) {
 				mathml += '<msub><mi>'+funcao.funcao.variaveis[i-1].charAt(0)+'</mi><mn>'+funcao.funcao.variaveis[i-1].charAt(1)+'</mn></msub>';
 			}
 		}
@@ -232,41 +228,41 @@ function criarMathDic(dicionario,iteracao){
 	for (var i = 1; i<=dicionario.funcaoFolga.length; i++){ //MathML base
 		var mathml = montaMathML (dicionario.funcaoFolga[i-1], 'dicionario');
 		if(iteracao == 0){
-			$('#inicial .dicionario').append('<span>'+mathml+'</span><br />');
+			$('#inicial .dicionario').append('<div>'+mathml+'</div>');
 		} else {
-			$('#it'+iteracao+' .dicionario').append('<span>'+mathml+'</span><br />');
+			$('#it'+iteracao+' .dicionario').append('<div>'+mathml+'</div>');
 		}
 	}
 	
 	// Restri��es de n�o negatividade
 	mathml = naoNeg(dicionario.restricoesNn);
 	if(iteracao == 0){
-		$("div#inicial div.dicionario").append('<span>'+mathml+'</span><br />');
+		$("div#inicial div.dicionario").append('<div class="dic_nao_neg">'+mathml+'</div>');
 	} else {
-		$('#it'+iteracao+' .dicionario').append('<span>'+mathml+'</span><br />');
+		$('#it'+iteracao+' .dicionario').append('<div class="dic_nao_neg">'+mathml+'</div>');
 	}
 	//funcao objetivo
 	mathml = montaMathML(dicionario.funcaoObjetivo, 'fo');
 	if(iteracao == 0){
-		$("div#inicial div.dicionario").append('<br /><span>'+mathml+'</span><br />');
+		$("div#inicial div.dicionario").append('<div class="dic_fo">'+mathml+'</div>');
 	} else {
-		$('#it'+iteracao+' .dicionario').append('<br /><span>'+mathml+'</span><br />');
+		$('#it'+iteracao+' .dicionario').append('<div class="dic_fo">'+mathml+'</div>');
 	}
 	
 	//conjunto solucao
 	mathml = mathml_conjunto_solucao (dicionario.getSolucao());
 	if(iteracao == 0){
-		$("div#inicial div.dicionario").append('<br /><span>'+mathml+'</span><br />');
+		$("div#inicial div.dicionario").append('<div class="dic_solucao">'+mathml+'</div>');
 	} else {
-		$('#it'+iteracao+' .dicionario').append('<br /><span>'+mathml+'</span><br />');
+		$('#it'+iteracao+' .dicionario').append('<div class="dic_solucao">'+mathml+'</div>');
 	}
 	
 	// Z m�ximo
 	mathml = mathml_z_max(dicionario.maxZ);
 	if(iteracao == 0){
-		$("div#inicial div.dicionario").append('<br /><span>'+mathml+'</span><br />');
+		$("div#inicial div.dicionario").append('<div>'+mathml+'</div>');
 	} else {
-		$('#it'+iteracao+' .dicionario').append('<br /><span>'+mathml+'</span><br />');
+		$('#it'+iteracao+' .dicionario').append('<div>'+mathml+'</div>');
 	}
 }
 
@@ -300,51 +296,6 @@ function mathml_z_max(z){
 	return mathml;
 }
 
-/*function criarRecalculo(){
-	var funcao = arguments[0];
-	var iteracao = arguments[1];
-	//console.log(funcao);
-	var local = 'recalculo';
-	var mathml = montaMathML(funcao, local);
-	$('#it'+iteracao+' .recalculo').append('<span>'+mathml+'</span><br />');
-}*/
-
-function montaMatmlRecalculoPrincipal(){
-	var funcao = arguments[0];
-	var mathml = montaMathML(funcao,'rec');
-	console.log(mathml);
-	console.log('---------------');
-}
-
-function montaMatmlRecalculoDemais(){
-	//this,index,subx,coef
-	var funcao = arguments[0];
-	var inCoef = arguments[1];
-	var mathml;
-	var aux = new Folga();
-	
-	//VERIFICAR SE O COEF DA VARIAVEL QUE ENTRA � UMA FRA��O
-	var frac = toFrac(roundSigDig(inCoef,15) , 1000, .000000001);
-	var check = checkString(frac,"/",true);  //verificar se � uma fra��o
-	mathml = '<math><mn>'+frac+'<mn><msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
-	
-	mathml += montaMathML(funcao, 'rec2');
-	console.log(mathml);
-	//PRINTA O MATHML NA TELA
-	
-	if(inCoef != 1 && inCoef !=0){
-		for(var i=0;i<funcao.funcao.variaveis.length;i++){
-			aux.funcao.coeficientes[i] = funcao.funcao.coeficientes[i] +'/'+ inCoef;
-			aux.funcao.variaveis[i] = funcao.funcao.variaveis[i];
-		}
-		aux.funcao.constante = funcao.funcao.constante +'/'+ inCoef;
-		aux.variavel = funcao.variavel;
-	}
-	//mathml = '<math><msub><mi>'+aux.variavel.charAt(0)+'</mi><mn>'+aux.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
-	mathml = montaMathML(aux, 'rec2');
-	console.log(mathml);
-}
-
 function mathmlRecalculo(){
 	var fim = false;
 	switch(arguments[1]){
@@ -352,7 +303,7 @@ function mathmlRecalculo(){
 			var iteracao = arguments[2];
 			var funcao = arguments[0];
 			var mathml = monta_mathml_rec_padrao(funcao);
-			$('#it'+iteracao+' > .recalculo').append('<div class="rec_eq" style="margin-bottom:20px"></div>');
+			$('#it'+iteracao+' > .recalculo').append('<div class="rec_eq"></div>');
 			$('.rec_eq').last().append('<div>'+mathml+'</div>');
 		break;
 		case 'final':
@@ -1803,7 +1754,7 @@ function mathml_afr(){
             switch(aux[i][j].tipo){
                 case 'inicial':
                     var iteracao = aux[i][j].iteracao;
-                    $('#it'+iteracao+' > .analise_fr').append('<div class="afr" style="margin-bottom:20px"></div>');
+                    $('#it'+iteracao+' > .analise_fr').append('<div class="afr"></div>');
                     /*
                     var xn = arguments[0]; // NOME DA FUNCAO -- (X4 = ) 
                     var cons = arguments[1];

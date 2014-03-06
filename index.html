@@ -137,25 +137,6 @@
 			// =========================== //
 			
 		});
-		
-		function novasAbas() {
-			var qtd_novas_abas = $("div#inicial textarea#input").val();
-			var abas_atuais = $("ul.tabs").find("a");
-			var aux;
-			
-			for (var i=0; i < qtd_novas_abas;i++) {
-				aux = abas_atuais.length + i;
-				$("<li><a href='#tab"+aux+"'>"+aux+"ª Iteração</a></li>").appendTo("ul.tabs");
-				$("<div id='tab"+aux+"' style='display: none;' class='main'><h3>"+aux+"ª Iteração</h3></div>").appendTo("body");
-			}
-			//$("#inicial .formulario").hide();
-		}
-	
-		function esconderTextBox(){
-			$("#inicial > form").hide();
-			$("#inicial #ha").show();
-		}
-
 	</script>
 	
 </head>
