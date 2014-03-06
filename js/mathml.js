@@ -421,7 +421,7 @@ function mathmlRecalculoFo(){
 				funcao.funcao.constante = arguments[2];
 			}*/
 			var mathml = monta_mathml_rec_obj_padrao(funcao);
-			$('#it'+iteracao+' > .recalculo').append('<div class="rec_eq" style="margin-bottom:20px"></div>');
+			$('#it'+iteracao+' > .recalculo').append('<div class="rec_eq"></div>');
 			$('.rec_eq').last().append('<div>'+mathml+'</div>');
 		break;
 		case 'final':
