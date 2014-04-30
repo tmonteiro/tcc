@@ -1,6 +1,6 @@
 //MATHML
 
-function criarPPL(problema){
+function mathml_ppl(problema){
 	var mathml = montaMathML(problema.funcaoObjetivo);
 	$("div#inicial div.problema").append(mathml);
 	$("div#inicial div.problema").append("<br /><math><mtext class='mtext'>Sujeito a</mtext></math><br />");
@@ -223,10 +223,10 @@ function naoNeg(vars) {
 	return mathml;
 }
 
-function criarMathDic(dicionario,iteracao){
+function mathml_dicionario(dicionario,iteracao){
 	
-	for (var i = 1; i<=dicionario.funcaoFolga.length; i++){ //MathML base
-		var mathml = montaMathML (dicionario.funcaoFolga[i-1], 'dicionario');
+	for (var i = 1; i<=dicionario.folgas.length; i++){ //MathML base
+		var mathml = montaMathML (dicionario.folgas[i-1], 'dicionario');
 		if(iteracao == 0){
 			$('#inicial .dicionario').append('<div>'+mathml+'</div>');
 		} else {
@@ -478,101 +478,82 @@ function mathmlRecalculoFo(){
 
 function monta_mathml_rec_padrao(funcao) {
 
-	/* ********************************************DECLARA��O DAS VARIAVEIS *********************************************** */
-	var xn = funcao.variavel; /* NOME DA FUNCAO -- (X4 = ) */
+	var xn = funcao.variavel; 
 	var cons = funcao.funcao.constante;
 	var vars = funcao.funcao.variaveis;
 	var coef = funcao.funcao.coeficientes;
 	var mathml = '<math>';
-	var frac = ''; //variavel usada para tranformar o decimal em fra��o
-	var check=''; // variavel para verificar se frac � uma frac�o ou numero inteiro
-	/* ********************************************************************************************************************* */
-	
-	/* *************************************************** LHS DA FUNCAO *************************************************** */
+	var frac = '';
+	var check='';
+		
 	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
-	/* ********************************************************************************************************************* */
 	
-	/* *************************************************** CONSTANTE ******************************************************* */
 	if (cons != null) {
-		frac = toFrac(roundSigDig(cons,15) , 1000, .000000001);
+		frac = toFrac(cons);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENT�O � UMA FRA��O
-		
-			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
+		if (check > 0) { 
+			switch(frac.charAt(0)){ 
 				case '-':  // negativo
 					mathml += '<mo>-</mo>'
-					mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
-					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+					mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>';
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 				break;
 				default: // positivo
-					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
-					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
-			}
-			
-		} else { // CHECK < ZERO =  NUMERO INTEIRO 
-		
-			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
-				case '-':  // negativo
+					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; 
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; 
+			}		
+		} else { 
+			switch(frac.charAt(0)){ 
+				case '-': 
 					mathml += '<mo>-</mo>'
 					mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
 				break;
-				default: // positivo
+				default: 
 					mathml += '<mn>'+frac+'</mn>';
 			}
 		}
-		
 	}
-	/* *********************************************************************************************************************** */
-	
-	/* ******************************************** COEFICIENTES E VARIAVEIS  ************************************************ */
+		
 	for (var i=0; i<coef.length; i++) {
-		frac = toFrac(roundSigDig(coef[i],15) , 1000, .000000001);
+		frac = toFrac(coef[i]);
 		check = checkString(frac,"/",true);
 		
-		if (check > 0) { // SE CHECK > ZERO ENT�O � UMA FRA��O
-		
-			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
-				case '-':  // NEGATIVO
+		if (check > 0) {
+			switch(frac.charAt(0)){
+				case '-':  
 					mathml += '<mo>-</mo>';
-					mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>'; //NUMERADOR
-					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
+					mathml += '<mfrac><mn>'+frac.substring(1,check)+'</mn>';
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 				break;
-				default: // POSITIVO
-					if(cons != null || cons != undefined){ // SE A FUNCAO TIVER CONSTANTE DEVE-SE APRESENTAR O SINAL POSITIVO
+				default: 
+					if(cons != null || cons != undefined){
 						mathml += '<mo>+</mo>';
 					}
 					mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn>'; //NUMERADOR
-					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>'; //DENOMIDADOR
-			}
-			
-		} else { // CHECK < ZERO =  NUMERO INTEIRO 
-		
-			switch(frac.charAt(0)){ //VERIFICAR O SINAL (POSITIVO OU NEGATIVO)
-				case '-':  // NEGATIVO
+					mathml += '<mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
+			}	
+		} else {
+			switch(frac.charAt(0)){
+				case '-':  
 					mathml += '<mo>-</mo>'
 					if ((frac != -1) && (frac != 0)) {
 						mathml += '<mn>'+frac.substring(1,frac.length)+'</mn>';
 					}
 				break;
-				default: // POSITIVO
-					// SE FOR O PRIMEIRO ELEMENTO E A FUNCAO TIVER CONSTANTE DEVE-SE APRESENTAR O SINAL POSITIVO OU SE FOR OS OUTROS ELEMENTOS  TBM DEVE APRESENTAR O POSITIVO
+				default:
 					if( ((i==0) && (cons != null || cons != undefined)) || i!=0 || !( (i==0) && (cons==null || cons==undefined ) )){ 
 						mathml += '<mo>+</mo>';
-						if ((frac != 1) && (frac != 0)) {
-							mathml += '<mn>'+frac+'</mn>';
-						}
+                        mathml += '<mn>'+frac+'</mn>';
 					}
-			}
-			
+			}			
 		}
 		
-		if (frac != 0) { // s� mostra a variavel se o coeficiente for diferente de 0
+		if (frac != 0) {
 			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
 		}
-		
 	}
-	/* *********************************************************************************************************************** */	
+    
 	mathml += '</math>';
 	return(mathml);
 }

@@ -1,125 +1,82 @@
-var problema;
-var arrayRestricoes = new Array();
-var arrayRestricoes = new Array();
-var arrayRestricoesAtivas = new Array();
+window.onload = function() {
 
+    $('#enviar').on('click', function (){
+        var ppl = $("textarea").val();
+        if (ppl == '') {
+            alert("Insira um PPL vÃ¡lido.");
+        } else {
+            $('.formulario').hide();
+            $('#inicial #info').hide();
+            $('#inicial').append('<div class="problema"><h4>PPL</h4></div>');
+            $('#inicial').append('<div class="dicionario"><h4>DicionÃ¡rio Inicial</h4></div>');
+            $('#inicial .footer').remove();
+            resolver(ppl);
+            $('#inicial').append('<footer class="footer"></footer>');
+        }
+    });
+    
+    $('#exemplo').on('click', function (){
+        $('#input').val('max z = 5x1 + 5x2 + 3x3\nsujeito a\nx1 + 3x2 + x3 <= 3\n-x1 + 3x3 <= 2\n2x1- x2 + 2x3 <= 4\n2x1 + 3x2 - x3 <= 2'); 
+    });
 
-function exemplo() {
-	$("#stringPpl").val("Max z = 5x1 + 5x2 + 3x3\nsujeito a\nx1 + 3x2 + x3 <= 3\n-x1 + 3x2<=2\n2x1 - x2 + 2x3 <= 4\n2x1 + 3x2 - x3 <= 2");
+    $('#limpar').on('click', function (){
+        $('#input').val('');
+    });
+
 }
 
-function resolver() {
-	//$("form").hide();
-	$("section").show();
-	var stringPPL = tratar_string($("#stringPpl").val());
-	var cr = unescape( "%0D" );	
-	var arrayPPL = extrair_array_elementos(stringPPL,cr);
-	
-	var funcaoObjetivo = extrair_funcao_objetivo(arrayPPL);
-	var restricoes = extrair_restricoes(arrayPPL);  
-	
-	problema = new Problema();
-	problema.setFuncaoObjetivo(funcaoObjetivo);
-	problema.setRestricoes(restricoes);
-	
-	criarPPL(problema);
-	
-	function criarPPL(problema){
-		montaMathML(problema.funcaoObjetivo,"ppl_fo");
-		
-		var local = "ppl_rest";
-		for (var i = 1; i<=restricoes.length; i++){ //MathML Restrições
-			$("#ppl > span").show();
-			montaMathML(restricoes[i-1], local);
-			$("#ppl > #ppl_rest").clone().appendTo("#ppl").attr("id","ppl_rest"+i+"").text("");
-			local = "ppl_rest"+i+"";
-		}
-		$("#ppl > p:last-child").remove();
-		
-		naoNeg(problema.funcaoObjetivo.funcao.variaveis, "naoNeg");
-	}
-	
-	dicionario = new Dicionario();
-	dicionario.setBase(problema.restricoes);
-	dicionario.setFuncaoObjetivo(problema.funcaoObjetivo);
-	dicionario.setRestricoesNn();
-	dicionario.setSolucao();
-	dicionario.setMaxZ();
-	
-	criarMathDic(dicionario, "dic_inicial");	
+function resolver(ppl){
+    
+    var string = tratar_string(ppl),
+        arrayPPL,
+        restricoes,
+        iteracao = 0,
+        solucao_otima;
+    
+    arrayPPL = extrair_array_elementos(string, unescape( "%0D" ));
+    funcaoObjetivo = extrair_funcao_objetivo(arrayPPL);
+    restricoes = extrair_restricoes(arrayPPL);  
 
-	console.log('********** DICIONARIO INICIAL **********');
-	for (var i = 0; i<dicionario.funcaoFolga.length; i++) {
-		console.log(dicionario.funcaoFolga[i].variavel +' = ');
-		console.log(dicionario.funcaoFolga[i].funcao.constante);
-		console.log(dicionario.funcaoFolga[i].funcao.coeficientes);
-		console.log(dicionario.funcaoFolga[i].funcao.variaveis);
-		console.log("----------------");
-	}
-	console.log(dicionario.restricoesNn+ ' > 0');
-	console.log("----------------");
-	console.log('Z = '+ dicionario.funcaoObjetivo.funcao.coeficientes);
-	console.log(dicionario.funcaoObjetivo.funcao.variaveis);
-	console.log("----------------");
-	console.log('S = '+dicionario.getSolucao());
-	console.log('Z = '+dicionario.maxZ);
-	console.log('****************************************');
-	
-	
-	var solucao_otima = dicionario.funcaoObjetivo.verificarSolucao();
-	var iteracao = 0;
-	while (solucao_otima !=1){
-		iteracao++;
-		
-		dicionario.analise_ff(iteracao);
-		dicionario.recalculoEquacoes();
-		dicionario.setSolucao();
-		dicionario.setMaxZ();
-		var fracs = [];
-		console.log('********** DICIONARIO ' +iteracao+ 'ª ITERACAO **********');
-		for (var i = 0; i<dicionario.funcaoFolga.length; i++) {
-			//var frac = toFrac (roundSigDig(dicionario.funcaoFolga[i].funcao.coeficientes[0],15) , 1000, .000000001);
-			//console.log("FRACAO DO PRIMEIRO COEFICIENTE = "+frac);
-			console.log(dicionario.funcaoFolga[i].variavel +' = ' + toFrac (roundSigDig(dicionario.funcaoFolga[i].funcao.constante,15) , 1000, .000000001));
-			//console.log(dicionario.funcaoFolga[i].funcao.constante);
-			for(var j = 0; j<dicionario.funcaoFolga[i].funcao.coeficientes.length;j++){
-				var frac = toFrac (roundSigDig(dicionario.funcaoFolga[i].funcao.coeficientes[j],15) , 1000, .000000001);
-				//console.log(frac+" = "+dicionario.funcaoFolga[i].funcao.coeficientes[j]);
-				
-				fracs[j] = frac;
-			}
-			console.log(fracs);
-			console.log(dicionario.funcaoFolga[i].funcao.variaveis);
-			console.log("----------------");
-		}
-		//MATHML
-		criarMathDic(dicionario, iteracao);
-		//MATHML
-		console.log(dicionario.restricoesNn+ ' > 0');
-		console.log("----------------");
-		console.log('Z = '+toFrac (roundSigDig(dicionario.funcaoObjetivo.funcao.constante,15) , 1000, .000000001));
-		for(var j = 0; j<dicionario.funcaoObjetivo.funcao.coeficientes.length;j++){
-				var frac = toFrac (roundSigDig(dicionario.funcaoObjetivo.funcao.coeficientes[j],15) , 1000, .000000001);	
-				fracs[j] = frac;
-			}
-		console.log(fracs);
-		console.log(dicionario.funcaoObjetivo.funcao.variaveis);
-		console.log("----------------");
-		var solucao = dicionario.getSolucao();
-		for (var j = 0; j<solucao.length; j++){
-			solucao[j] = toFrac(roundSigDig(solucao[j],15) , 1000, .000000001);
-		}
-		console.log('S = '+solucao);
-		console.log('Z = '+toFrac(roundSigDig(dicionario.maxZ,15) , 1000, .000000001));
-		console.log('****************************************');
-		
-		solucao_otima = dicionario.funcaoObjetivo.verificarSolucao();
-	}
+    problema = new Problema();
+    problema.setFuncaoObjetivo(funcaoObjetivo);
+    problema.setRestricoes(restricoes);
+    mathml_ppl(problema);
+
+    dicionario = new Dicionario();
+    dicionario.setBase(problema.restricoes);
+    dicionario.setFuncaoObjetivo(problema.funcaoObjetivo);
+    dicionario.setRestricoesNn();
+    dicionario.setSolucao();
+    dicionario.setMaxZ();
+    mathml_dicionario(dicionario, iteracao);
+
+    solucao_otima = dicionario.funcaoObjetivo.verificarSolucao();
+
+    while (solucao_otima != true) {
+        iteracao++;
+        $('.wrap').append('<div id="it'+iteracao+'" class="main" hidden></div>');
+        $('ul.tabs').append('<li><a href="#it'+iteracao+'"> '+iteracao+'Âª IteraÃ§Ã£o</a></li>');
+
+        $('#it'+iteracao+'').append('<section class="analise_fr"><h4>ForÃ§as Restritivas '+iteracao+'Âª IteraÃ§Ã£o</h4></section>');
+        dicionario.analise_ff(iteracao);
+
+        $('#it'+iteracao+'').append('<section class="recalculo"><h4>RecÃ¡lculo das equaÃ§Ãµes da '+iteracao+'Âª IteraÃ§Ã£o</h4></section>');
+        dicionario.recalculoEquacoes(iteracao);
+        dicionario.setSolucao();
+        dicionario.setMaxZ();
+
+        $('#it'+iteracao+'').append('<section class="dicionario"><h4>DicionÃ¡rio '+iteracao+'Âª IteraÃ§Ã£o</h4></section>');
+        mathml_dicionario(dicionario, iteracao);
+
+        solucao_otima = dicionario.funcaoObjetivo.verificarSolucao();
+
+        $('#it'+iteracao+'').append('<footer class="footer"></footer>');
+    }
 }
 
 function tratar_string(string) {
 	
-	string = retira_espacos(string); //Retirar espaços em branco da String
+	string = retira_espacos(string); //Retirar espaï¿½os em branco da String
 
 	var cr = unescape( "%0D" );	
 	var lf = unescape( "%0A" );
@@ -198,7 +155,7 @@ function replaceSubstring(inString, oldSubstring, newSubstring){
 function check_string(inString,subString,backtrack){
 
 // verifica se a string possui uma determinada subString
-// se backtrack = false, retorna -1 não foi encontrada
+// se backtrack = false, retorna -1 nï¿½o foi encontrada
 // se backtrack = true, returns -1 if not found, and right-most location in string if found
 // note that location is to the left of the substring in both cases
 
@@ -244,7 +201,7 @@ function extrair_array_elementos(inString, sep) {
 	local[0] = -1;
 	var length = inString.length;
 
-	//Array 'local' com a posição de separadores na String
+	//Array 'local' com a posiï¿½ï¿½o de separadores na String
 	for (var i = 0; i < length; i++) {
 		if(inString.charAt(i)==sep)	{
 			numSep++;
@@ -345,7 +302,7 @@ function parseLinearExpr(inString){
 function checkString(inString,subString,backtrack){
 
 // verifica se a string possui uma determinada subString
-// se backtrack = false, retorna -1 não foi encontrada
+// se backtrack = false, retorna -1 nï¿½o foi encontrada
 // se backtrack = true, returns -1 if not found, and right-most location in string if found
 // note that location is to the left of the substring in both cases
 
@@ -365,7 +322,7 @@ var symbLength = subString.length;
 }
 
 /* ====================================================== */
-/* ==== Tranformar numero decimal em Fração ============= */
+/* ==== Tranformar numero decimal em Fraï¿½ï¿½o ============= */
 /* ====================================================== */
 
 function roundSigDig(theNumber, numDigits) {
@@ -400,14 +357,9 @@ function roundSigDig(theNumber, numDigits) {
 	}
 }
 
-function toFrac(x, maxDenom, tol) {
-
-// tolerance is the largest errror you will tolerate before resorting to 
-// expressing the result as the input decimal in fraction form
-// suggest no less than 10^-10, since we round all to 15 decimal places.
+function toFrac(x) {
 
 	var theFrac = new Array();
-
 	theFrac[1] = 0;
 	theFrac[2] = 0;
 
@@ -416,18 +368,13 @@ function toFrac(x, maxDenom, tol) {
 	var q1 = 0;
 	var q2 = 1;	
 
-	var u =0;
+	var u = 0;
 	var t = 0;
 	
 	var flag = true;
 	var negflag = false;
 
-	var a = 0;
-	var xIn = x; // variable for later
-
-	if (x >10000000000) return(theFrac);
-
-	while (flag){
+	while (flag) {
 
 		if (x < 0) {
 			x = -x;
@@ -435,16 +382,15 @@ function toFrac(x, maxDenom, tol) {
 			p1 = -p1;
 		}
 
-		var intPart = Math.floor(x); // PEGA A PARTE INTEIRA DO NÚMERO
-		var decimalPart = roundSigDig((x - intPart),15);  //PEGA A PARTE DECIMAL DO NÚMERO
+		var intPart = Math.floor(x); 
+		var decimalPart = roundSigDig((x - intPart),15);
 
 		x = decimalPart;
-		a = intPart;
 
-		t = a*p1 + p2;
-		u = a*q1 + q2;
+		t = intPart * p1 + p2;
+		u = intPart * q1 + q2;
 
-		if  ( (Math.abs(t) > 10000000000 ) || (u > maxDenom ) ) {
+		if  ( (Math.abs(t) > 10000000000 ) || (u > 1000 ) ) {
 			n = p1;
 			d = q1;
 			break;
@@ -452,9 +398,6 @@ function toFrac(x, maxDenom, tol) {
 
 		p = t;
 		q = u;
-				
-	//		cout << "cf coeff: " << a << endl; // for debugging
-	//		cout << p << "/" << q << endl;	// for debugging
 
 		if ( x == 0 ) {
 			n = p;
@@ -468,19 +411,18 @@ function toFrac(x, maxDenom, tol) {
 		q1 = q;
 		x = 1/x;
 
-	} // while ( true );
-
+	}
+    
 	theFrac[1] = n;
 	theFrac[2] = d;
 
 	if (theFrac[2] == 1) {
-		return (theFrac[1].toString());
-		}
-	else {
+        return (theFrac[1].toString());
+    } else {
 		return (theFrac[1] + "/" + theFrac[2]);
-		}
+    }
 
-} // toFrac
+}
 
 function shiftRight(theNumber, k) { //PASSA O NUMERO EX.: 4.5
     

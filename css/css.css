@@ -1,25 +1,36 @@
+/***************** ESTILOS GERAIS *****************/
 * {padding:0; margin:0;}
+
 body {
 	font-size: 62.5%; /* '10px padrão' */
 	width: 100%;
-	//min-width: 1100px;
-	background:#ccc;
+    background:#ccc;
 	font-family: Helvetica, Arial, sans-serif;
+    min-width: 1000px;
 }
+
 a {
 	text-decoration:none;
 	color:#444;
 }
 
-.wrap {
-	margin:0.5em 0.5em 0;
-	//font-family: verdana;
-	//font-size:2.0em;
+h4 {
+	border-bottom: solid 0.2em #666;
+	padding: 0.5em 0 0.5em 0 ;
+	margin: 0 0 0.5em 0 ;
+	font-size: 1.8em;
+	color: #666;
 }
 
 p, h3 { 
 	padding: 0 0.25em 1em ;
 	font-size:3.6em;
+}
+/**************************************************/
+
+/******************* ESTRUTURA ********************/
+#wrap {
+	margin:0.5em 0.5em 0;
 }
 
 div.main {
@@ -27,6 +38,49 @@ div.main {
 	background:#fff;
 }
 
+textarea {
+	border:0.05em solid #ccc;
+	resize: none;
+	overflow:scroll-vertical;
+	width: 100%;
+	height: 20em;
+	font-size: 2em;
+}
+
+#info {
+    float: right;
+    width: 59%;
+    color:#444;
+}
+
+#info p {
+    font-size: 1.8em;
+    text-align: justify;  
+}
+
+#info ul {
+    padding: 0 0.25em;
+    margin: 0 0 0 0;
+    font-size: 1.5em;
+}
+
+#info ul li {
+    margin: 0 0 0 2em;
+}
+
+
+.formulario {
+	float:left;
+	width:40%;
+}
+
+.footer {
+	clear:both;
+    background-color: black;
+}
+/************************************************/
+
+/******************* TABS ***********************/
 .tabs li {
 	list-style:none;
 	display:inline;
@@ -49,19 +103,9 @@ div.main {
 	background:#fff;
 	color:#444;
 }
+/************************************************/
 
-textarea {
-	border:0.05em solid #ccc;
-	resize: none;
-	overflow:scroll-vertical;
-	width: 50%;
-	height: 20em;
-	font-size: 2em;
-}
-
-
-/* BOTÃO BÁSICO */
-
+/******************* BOTÕES *********************/
 .botoes{
 	width:100%;	
 }
@@ -84,62 +128,43 @@ textarea {
 }.but:active{
 	background: #ccc;
 }
+/************************************************/
+
+
+/*************** MATHML STYLES ******************/
+math {
+    font-family: _sans;
+    font-size: 2em;
+}
+
+mtext {
+	font-style:italic;
+}
 
 .problema {
 	width:30%;
 	float:left;
 	margin: 0 0.5em 0 0;
-} .problema math {
-	font-size: 2em;
 }	
-
-.mtext {
-	font-style:italic;
-}
-
-.formulario {
-	float:left;
-	width:100%;
-}
-.footer {
-	clear:both;
-}
-
-h4 {
-	border-bottom: solid 0.2em #666;
-	padding: 0.5em 0 0.5em 0 ;
-	margin: 0 0 0.5em 0 ;
-	font-size: 1.8em;
-	color: #666;
-}
-
 
 .dicionario {
 	width:27%;
-	/*background:red;*/
 	float:left;
-} .dicionario math {
-	font-size: 2em;
-}	
+}
 
 .recalculo {
 	width: 40%;
 	float:left;
 	margin: 0 0.5em 0 0;
-	/*background-color:#ccc;*/
-}.recalculo math {
-	font-size: 2em;
-}	
+}
 
 .analise_fr{
 	width: 30%;
 	float:left;
 	margin: 0 0.5em 0 0;
-} .analise_fr math {
-	font-size: 2em;
 }
 
-.rec_eq , .afr {	
+.rec_eq, .afr {	
 	margin:0 0 4em 0;
 }
 
@@ -157,19 +182,28 @@ h4 {
 	margin: 0 0 2em 0;
 }
 
-/*********/
+/************************************************/
+
+
+/*************** MEDIA QUERIES ******************/
 
 @media only screen and (max-width : 600px) {
-
-    p, h3 { 
+    
+    body{
+        min-width:100%;
+    }
+    p, h3 {
 		font-size:2.8em;
 	}
 	
+    .formulario {
+        width: 100%;
+    }
+    
 	textarea {
 		width: 100%;
 		height: 20em;
 		font-size: 1.8em;
-		
 	}
 	
 	.botoes {
@@ -189,23 +223,28 @@ h4 {
 	
 	.dicionario {
 		width:100%;
-	} .dicionario math {
+	}
+    .dicionario math {
 		font-size: 1.7em;
 	}
 	.recalculo {
 		width: 100%;
 		float:left;
-		//margin: 0 0.5em 0 0;
-	}.recalculo math {
-		font-size: 1.5em; /* ****** */
+	}
+    .recalculo math {
+		font-size: 1.5em;
 	}	
 
 	.analise_fr{
 		width: 100%;
 		float:left;
-		//margin: 0 0 2em 0;
 	} .analise_fr math {
 		font-size: 1.7em;
 	}
+    
+    #info {
+        display: none;
+    }
 	
 }
+/************************************************/

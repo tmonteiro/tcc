@@ -1,6 +1,9 @@
-/* --------------------------------------------------------- */
-//	OBJETO FUNCAO OBJETIVO
-/* --------------------------------------------------------- */
+function Problema() {
+	this.funcaoObjetivo = new FuncaoObjetivo();
+	this.restricoes = new Array();
+	this.restNaoNegatividade = null;
+}
+
 function FuncaoObjetivo() {
 	this.tipo = new String();
 	this.nome = new String();
@@ -15,56 +18,85 @@ function FuncaoObjetivo() {
 	};
 }
 
+function Restricao() {
+	this.funcao = {
+		coeficientes : new Array(),
+		variaveis : new Array(),
+		};
+	this.ineq = new String;
+	this.constante = new Number();
+}
+
+function Folga(){
+	this.variavel = new Array();
+	this.funcao = {
+		coeficientes : new Array(),
+		variaveis : new Array(),
+		constante : null
+		};
+}
+
+function Dicionario() {
+	this.folgas = new Array();
+	this.funcaoObjetivo = new FuncaoObjetivo();
+	this.restricoesNn = new Array();
+	this.solucao = new Array();
+	this.maiorRestricao = {
+					coeficiente: null,
+					variavel: null
+					};
+	this.maxZ = null;
+}
+
+/// ************************ ////
 FuncaoObjetivo.prototype.setTipo = function(inString) {
 	this.tipo = inString;
 }
 
 FuncaoObjetivo.prototype.setFuncaoObjetivo = function(inArray) {
-	var temp;
+	var aux;
 	for (var i = 0; i < inArray.length; i++){
 		this.funcao.variaveis[i] = /([a-zA-Z].*)/.exec(inArray[i])[1];
-		temp = inArray[i].replace(/[a-zA-Z].*/, '');
-		if (temp == "+"){
-			temp = "1";
+		aux = inArray[i].replace(/[a-zA-Z].*/, '');
+		if (aux == "+"){
+			aux = "1";
 		}
-		else if  (temp == "-"){
-			temp = "-1";
+		else if  (aux == "-"){
+			aux = "-1";
 		}
-		this.funcao.coeficientes[i] = Number(temp);
+		this.funcao.coeficientes[i] = Number(aux);
 	}
 	this.nome = 'z';
 }
 
 /*FuncaoObjetivo.prototype.calcular_max_z = function(inArray) { }*/
 
-FuncaoObjetivo.prototype.verificarSolucao = function () {
-	var temp = this.funcao.coeficientes;
-	var neg = new Array();
-	for (i=0; i<temp.length; i++){
-		var aux = temp[i];
-		if (aux <= 0) {
-			neg[i] = aux;
+FuncaoObjetivo.prototype.verificarSolucao = function() {
+	var coef = this.funcao.coeficientes;
+	var aux = new Array();
+    
+	for (i=0; i<coef.length; i++) {
+		if (coef[i] <= 0) {
+			aux[i] = coef[i];
 		} else {
-			// AINDA EXISTEM VARIAVEIS QUE PODEM INCREMENTAR O Z
-			this.maior_elemento();
+			this.maiorElemento();
 		}
 	}
-	if (neg.length == temp.length){
-		//N�O EXISTEM VARIAVEIS QUE PODEM INCREMENTAR O Z
-		//alert (this.maxZ + "A solucao � �tima.");
-		return 1;
-	}
-	return 0;
-	
+    
+	if (aux.length == coef.length){
+		return true;
+	} else {
+        return false;
+    }
 }
 
-FuncaoObjetivo.prototype.maior_elemento= function() {
+FuncaoObjetivo.prototype.maiorElemento = function() {
 	var temp = this.funcao.coeficientes;
 	var maior = 0;
 	for (i=0; i<temp.length; i++){
 		var aux = temp[i];
-		if (aux > maior) {
-			maior = aux;
+		if (temp[i] > maior) {
+			maior = temp[i];
 		}
 	}
 	this.maior.coeficiente = maior;
@@ -165,15 +197,6 @@ FuncaoObjetivo.prototype.recalcular = function(){
 /*	OBJETO RESTRICAO                                         */
 /* --------------------------------------------------------- */
 
-function Restricao() {
-	this.funcao = {
-		coeficientes : new Array(),
-		variaveis : new Array(),
-		};
-	this.ineq = new String;
-	this.constante = new Number();
-}
-
 Restricao.prototype.setRestricao = function(inArray) {
 	var temp;
 	for (var i = 0; i < inArray.length-2; i++){
@@ -194,11 +217,7 @@ Restricao.prototype.setRestricao = function(inArray) {
 /* --------------------------------------------------------- */
 //	OBJETO PROBLEMA
 /* --------------------------------------------------------- */
-function Problema() {
-	this.funcaoObjetivo = null;
-	this.restricoes = new Array();
-	this.restNaoNegatividade = null;
-}
+
 
 Problema.prototype.setFuncaoObjetivo = function() {
 	this.funcaoObjetivo = arguments[0];
@@ -220,16 +239,9 @@ Problema.prototype.getRestricoesNn = function() {
 /*Problema.prototype.toMathML = function() {}*/
 
 /* --------------------------------------------------------- */
-//	OBJETO folga
+//	OBJETO Folga
 /* --------------------------------------------------------- */
-function Folga(){
-	this.variavel = new Array();
-	this.funcao = {
-		coeficientes : new Array(),
-		variaveis : new Array(),
-		constante : null
-		};
-}
+
 
 Folga.prototype.setFolga = function() {
 	var rest = arguments[0];
@@ -435,26 +447,15 @@ Folga.prototype.forcaRestritiva = function() {
 //	OBJETO DICIONARIO
 /* --------------------------------------------------------- */
 
-function Dicionario() {
-	//this.variaveisBase = new Array();
-	this.funcaoFolga = new Array();
-	this.funcaoObjetivo = new FuncaoObjetivo();
-	this.restricoesNn = new Array();
-	this.solucao = new Array();
-	this.maiorRestricao = {
-					coeficiente: null,
-					variavel: null
-					};
-	this.maxZ = null;
-}
+
 
 Dicionario.prototype.setBase = function() {
 	var rest = arguments[0];
 	var indVar = problema.funcaoObjetivo.funcao.variaveis.length;
 	
 	for (var i=1; i<=rest.length; i++) {
-		this.funcaoFolga[i-1] = new Folga();
-		this.funcaoFolga[i-1].setFolga(rest[i-1],indVar+i); 
+		this.folgas[i-1] = new Folga();
+		this.folgas[i-1].setFolga(rest[i-1],indVar+i); 
 	}
 }
 
@@ -466,8 +467,8 @@ Dicionario.prototype.setRestricoesNn = function() {
 	var vFo = this.funcaoObjetivo.funcao.variaveis;
 	var vVf = [];
 	
-	for(var i=0;i<this.funcaoFolga.length;i++) {
-		vVf[i] = this.funcaoFolga[i].variavel;
+	for(var i=0;i<this.folgas.length;i++) {
+		vVf[i] = this.folgas[i].variavel;
 	}
 	
 	var temp = this.restricoesNn.concat(vFo, vVf);
@@ -476,9 +477,9 @@ Dicionario.prototype.setRestricoesNn = function() {
 
 Dicionario.prototype.setSolucao = function() {
 
-	for (var i = 0; i<this.funcaoFolga.length; i++){
-		var tempVar =  this.funcaoFolga[i].variavel;
-		var tempCons = this.funcaoFolga[i].funcao.constante;
+	for (var i = 0; i<this.folgas.length; i++){
+		var tempVar =  this.folgas[i].variavel;
+		var tempCons = this.folgas[i].funcao.constante;
 		var tempIndex = this.restricoesNn.indexOf(tempVar);
 		this.solucao[tempIndex] = tempCons;
 	}
@@ -488,13 +489,14 @@ Dicionario.prototype.setSolucao = function() {
 		this.solucao[tempIndex] = 0;
 	}
 }
+
 Dicionario.prototype.getSolucao = function() {
 		this.setSolucao();
 		return this.solucao;
 }
 
 Dicionario.prototype.analise_ff = function() {
-	var folga = this.funcaoFolga;
+	var folga = this.folgas;
 	var fo = this.funcaoObjetivo;
 	var entra = fo.maior;
 	var temp = [];
@@ -525,27 +527,27 @@ Dicionario.prototype.recalculoEquacoes = function() {
 	var entra = this.funcaoObjetivo.maior.variavel;
 	var sai = this.maiorRestricao.variavel;
 	
-	for (var i=0; i<this.funcaoFolga.length;i++){
-		base[i] = this.funcaoFolga[i].variavel;
+	for (var i=0; i<this.folgas.length;i++){
+		base[i] = this.folgas[i].variavel;
 		if (base[i] == sai) {
 			var aux = i;
 		}
 	}
 	
 	//recalculo da principal
-	this.funcaoFolga[aux].recalcular(sai, entra,iteracao);
+	this.folgas[aux].recalcular(sai, entra,iteracao);
 	
 	var funcao = {
-				variavel : this.funcaoFolga[aux].variavel,
-				constante : this.funcaoFolga[aux].funcao.constante,
-				variaveis : this.funcaoFolga[aux].funcao.variaveis,
-				coeficientes : this.funcaoFolga[aux].funcao.coeficientes
+				variavel : this.folgas[aux].variavel,
+				constante : this.folgas[aux].funcao.constante,
+				variaveis : this.folgas[aux].funcao.variaveis,
+				coeficientes : this.folgas[aux].funcao.coeficientes
 			};
 	
 	//recalculo das demais
-	for (var i=0;i<this.funcaoFolga.length;i++){
+	for (var i=0;i<this.folgas.length;i++){
 		if (i!=aux) {
-			this.funcaoFolga[i].recalcular(funcao, iteracao);
+			this.folgas[i].recalcular(funcao, iteracao);
 		}
 	}
 	
