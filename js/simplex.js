@@ -66,9 +66,10 @@ function resolver(ppl) {
     dicionario.setMaxZ();
 
     $('#it' + iteracao + '').append('<section class="dicionario"><h4>Dicionário ' + iteracao + 'ª Iteração</h4></section>');
-    mathml_dicionario(dicionario, iteracao);
-
+    
     solucao_otima = dicionario.funcaoObjetivo.verificarSolucao();
+    
+    mathml_dicionario(dicionario, iteracao, solucao_otima);
 
     $('#it' + iteracao + '').append('<footer class="footer"></footer>');
   }

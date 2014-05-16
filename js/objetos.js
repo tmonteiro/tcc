@@ -111,12 +111,12 @@ FuncaoObjetivo.prototype.recalcular = function () {
   if (index != -1) {
 
     //mathml da funcaoObjetivo sem a manipulacao
-    mathmlRecalculoFo(this, 'fobjetivo', arguments[1]);
+    mathmlRecalculo(this, 'inicial', arguments[1]);
 
     this.funcao.variaveis.splice(index, 1, subvars);
     this.funcao.coeficientes.splice(index + 1, 0, subcoefs);
 
-    mathmlRecalculoFo(this, 'manip', subcons, arguments[1]);
+    mathmlRecalculo(this, 'manip', subcons, arguments[1]);
 
     var tempArray = new Array();
 
@@ -185,7 +185,7 @@ FuncaoObjetivo.prototype.recalcular = function () {
     this.funcao.coeficientes = tempCoef;
     this.funcao.variaveis = tempVars;
 
-    mathmlRecalculoFo(this, 'fobjetivo');
+    mathmlRecalculo(this, 'inicial');
   }
 }
 
