@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>PPL - Resolução Analítica</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/simplex.js"></script>
+	<script src="js/objetos.js"></script> 
+	<script src="js/mathml.js"></script>
+    <script src="js/tabs.js"></script>
+	<link rel="stylesheet" href="css/css.css">
+</head>
+<body>
+	<div class="wrap" id="wrap">
+		<h3><a href="index.html">Programação Linear - Resolução Analítica</a></h3>
+		<ul class='tabs'>
+			<li><a href='#inicial' hidden>Inicial</a></li>
+		</ul>
+		<div id='inicial' class='main'>	
+			<section class="formulario" id="form">
+				<form>
+					<textarea class="normal" id="input" name="textarea"  placeholder="INSIRA AQUI O PPL OU CLIQUE NO BOTÃO EXEMPLO"></textarea>
+				</form>
+				<div class="botoes">
+					<button type="button" class="but" id="enviar">Resolver</button>
+					<button type="button" class="but" id="limpar">Limpar</button>
+					<button type="button" class="but" id="exemplo">Exemplo</button>
+				</div>
+			</section>
+            <section id="info">
+                <p>A utilização deste sistema é bastante intuitivo: Pressione o botão "Exemplo" para ver um exemplo de um Problema de Programação Linear já configurado. Em seguida, modifique o exemplo ou digite o seu próprio PPL usando o mesmo formato que o exemplo e pressione "Resolver.</p>
+                <ul>
+                    <b>Notas:</b>
+                    <li>O PPL inserido deve ser em sua forma Primal.</li>
+                    <li>Não devem ser omitidas as palavras 'Max' e 'Sujeito a'.</li>
+                    <li>Variáveis com indices devem ser escritas da seguinte forma: x1, x2, x3.</li>
+                    <li>Todas as restrições devem conter o sinal de menor-ou-igual (<=).</li>
+                    <li>Deve ser omitido o sinal de positivo (+) quando o coeficiente for o primeiro elemento de uma equação.</li>
+                    <li>Não deve ser inserida a condição de não-negatividade (x1 <= 0), pois o sistema já considera essa restrição automaticamente.</li>
+                    <li>As restrições podem ser inseridas separadas por uma quebra de linha ou por vírgulas.</li>
+                    <li>No desenvolvimento da solução todos os números decimais serão apresentados em forma de frações.</li>
+                </ul>
+			</section>
+			<footer class='footer'></footer>
+		</div>
+	</div>
+</body>
+</html>
