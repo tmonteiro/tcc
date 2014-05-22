@@ -6,7 +6,7 @@ body {
 	width: 100%;
     background:#ccc;
 	font-family: Helvetica, Arial, sans-serif;
-    min-width: 1000px;
+    //min-width: 1000px;
 }
 
 a {
@@ -132,9 +132,13 @@ textarea {
 
 
 /*************** MATHML STYLES ******************/
+.math_index {
+  font-size: 1.5em;
+}
+
 math {
-    font-family: _sans;
-    font-size: 2em;
+  font-family: _sans;
+  font-size: 2em;
 }
 
 mtext {
