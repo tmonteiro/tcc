@@ -180,13 +180,29 @@ FuncaoObjetivo.prototype.recalcular = function () {
     }
 
     newCons = newCons + this.funcao.constante;
-    this.funcao.constante = newCons;
-
+	
+	this.funcao.constante = newCons;
     this.funcao.coeficientes = tempCoef;
     this.funcao.variaveis = tempVars;
 
+    this.bubblesort();
+	
     mathmlRecalculo(this, 'inicial');
   }
+}
+
+FuncaoObjetivo.prototype.bubblesort = function () {
+	var done = false;
+    while (!done) {
+        done = true;
+        for (var i = 1; i<this.funcao.variaveis.length; i++) {
+            if (parseInt(this.funcao.variaveis[i-1].substring(1, this.funcao.variaveis[i-1].length)) > parseInt(this.funcao.variaveis[i].substring(1, this.funcao.variaveis[i].length))) {
+                done = false;
+                [this.funcao.variaveis[i-1], this.funcao.variaveis[i]] = [this.funcao.variaveis[i], this.funcao.variaveis[i-1]];
+				[this.funcao.coeficientes[i-1], this.funcao.coeficientes[i]] = [this.funcao.coeficientes[i], this.funcao.coeficientes[i-1]];
+            }
+        }
+    }
 }
 
 /* --------------------------------------------------------- */
@@ -327,12 +343,13 @@ Folga.prototype.recalcular = function () {
 
       }
 
-      newCons = newCons + this.funcao.constante;
+      newCons = newCons + this.funcao.constante;  
       this.funcao.constante = newCons;
-
       this.funcao.coeficientes = tempCoef;
       this.funcao.variaveis = tempVars;
-
+	  
+	  this.bubblesort(); 
+	  
       mathmlRecalculo(this, 'final');
     }
   }
@@ -365,6 +382,8 @@ Folga.prototype.recalcular = function () {
     this.funcao.variaveis.splice(this.funcao.variaveis.indexOf(entra), 1);
 
     aux[0] = aux[0] * (-1);
+	
+	this.bubblesort();
 
     var fim = mathmlRecalculo(this, aux[0], iteracao); //MONTAR O MATHML PASSANDO A FUNCAO E O COEFICIENTE DA VARIAVEL QUE ENTROU NA BASE
 
@@ -377,13 +396,29 @@ Folga.prototype.recalcular = function () {
     this.funcao.coeficientes = new Array();
     this.funcao.coeficientes = rhs;
     this.funcao.constante = this.funcao.constante / lhs;
-
+	
+	this.bubblesort();
+	
     if (fim == false) {
       mathmlRecalculo(this, 'final', 'style');
     }
 
   }
 
+}
+
+Folga.prototype.bubblesort = function () {
+	var done = false;
+    while (!done) {
+        done = true;
+        for (var i = 1; i<this.funcao.variaveis.length; i++) {
+            if (parseInt(this.funcao.variaveis[i-1].substring(1, this.funcao.variaveis[i-1].length)) > parseInt(this.funcao.variaveis[i].substring(1, this.funcao.variaveis[i].length))) {
+                done = false;
+                [this.funcao.variaveis[i-1], this.funcao.variaveis[i]] = [this.funcao.variaveis[i], this.funcao.variaveis[i-1]];
+				[this.funcao.coeficientes[i-1], this.funcao.coeficientes[i]] = [this.funcao.coeficientes[i], this.funcao.coeficientes[i-1]];
+            }
+        }
+    }
 }
 
 Folga.prototype.forcaRestritiva = function () {
@@ -471,12 +506,15 @@ Folga.prototype.forcaRestritiva = function () {
 
 Dicionario.prototype.setBase = function () {
   var rest = arguments[0];
-  var indVar = problema.funcaoObjetivo.funcao.variaveis.length;
-
+  problema.funcaoObjetivo.bubblesort();
+  
+  var indVar = problema.funcaoObjetivo.funcao.variaveis[problema.funcaoObjetivo.funcao.variaveis.length-1]
+  
   for (var i = 1; i <= rest.length; i++) {
     this.base[i - 1] = new Folga();
-    this.base[i - 1].setFolga(rest[i - 1], indVar + i);
+    this.base[i - 1].setFolga(rest[i - 1], parseInt(indVar.substring(1, indVar.length)) + i);
   }
+  
 }
 
 Dicionario.prototype.setFuncaoObjetivo = function () {

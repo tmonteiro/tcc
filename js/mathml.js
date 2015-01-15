@@ -14,7 +14,7 @@ function mathml_ppl(problema){
 function naoNeg(vars) {
   var mathml = '<math>';
   for (var i = 0; i < vars.length; i++) {
-    mathml += '<msub><mi>' + vars[i].charAt(0) + '</mi><mn>' + vars[i].charAt(1) + '</mn></msub>';
+    mathml += '<msub><mi>' + vars[i].charAt(0) + '</mi><mn>' + vars[i].substring(1, vars[i].length) + '</mn></msub>';
     if (i != vars.length - 1) {
       mathml += '<mo>,</mo>';
     }
@@ -251,8 +251,8 @@ function monta_mathml_restricoes(funcao) {
           }
       }
 		}
-		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
-		mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
+		if (frac != 0) { // apenas mostra a variavel se o coeficiente for diferente de 0
+		mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].substring(1, vars[i].length)+'</mn></msub>';
 		}
 	}
   mathml += '<mo>&le;</mo>';
@@ -300,7 +300,7 @@ function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 		}
 	}
 	
-	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
+	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+ xn.substring(1, xn.length) +"</mn></msub><mo>=</mo>";
 	
 	if (inCoef == 1 || inCoef== -1){
 		mathml += '<mstyle mathcolor="red">';
@@ -375,8 +375,8 @@ function monta_mathml_rec_principal_segunda_etapa(funcao, inCoef) {
 			}
 		}
 		
-		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
-			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
+		if (frac != 0) { // apenas mostra a variavel se o coeficiente for diferente de 0
+			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+ vars[i].substring(1, vars[i].length) +'</mn></msub>';
 		}
 		
 	}
@@ -395,9 +395,9 @@ function monta_mathml_rec_subst(){
 	var funcaop3 = arguments[3];
 	var mathml = '<math>'
 	
-	mathml += '<msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.charAt(1)+'</mn></msub><mo>=</mo>';
+	mathml += '<msub><mi>'+funcao.variavel.charAt(0)+'</mi><mn>'+funcao.variavel.substring(1, funcao.variavel.length)+'</mn></msub><mo>=</mo>';
 	var frac = toFrac(roundSigDig(funcao.funcao.constante,15) , 1000, .000000001);
-	var check = checkString(frac,"/",true);  //verificar se ï¿½ uma fraï¿½ï¿½o
+	var check = checkString(frac,"/",true);  //verificar fracao
 	if (check > 0) {
 			mathml += '<mfrac><mn>'+frac.substring(0,check)+'</mn><mn>'+frac.substring(check+1, frac.length)+'</mn></mfrac>';
 	} else {
@@ -453,7 +453,7 @@ function monta_mathml_padrao(funcao, cons2, style) {
   if (funcao.nome == 'z') {
     mathml += "<mi>Z</mi><mo>=</mo>";
   } else {
-    mathml += "<msub><mi>" + funcao.variavel.charAt(0) + "</mi><mn>" + funcao.variavel.charAt(1) + "</mn></msub><mo>=</mo>";
+    mathml += "<msub><mi>" + funcao.variavel.charAt(0) + "</mi><mn>" + funcao.variavel.substring(1, funcao.variavel.length) + "</mn></msub><mo>=</mo>";
   }
   if (style == 'style') {
     mathml += "<mstyle mathcolor='red'>";
@@ -530,7 +530,7 @@ function monta_mathml_padrao(funcao, cons2, style) {
       }
     }
     if (frac != 0) { // sÃ³ mostra a variavel se o coeficiente for diferente de 0
-      mathml += '<msub><mi>' + vars[i].charAt(0) + '</mi><mn>' + vars[i].charAt(1) + '</mn></msub>';
+      mathml += '<msub><mi>' + vars[i].charAt(0) + '</mi><mn>' + vars[i].substring(1, vars[i].length)  + '</mn></msub>';
     }
   }
   if (style == 'style') {
@@ -551,7 +551,7 @@ function monta_mathml_rec_principal_terceira_etapa(funcao) {
 	var fim = arguments[1];
 	
 	/* LHS DA FUNCAO */
-	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
+	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.substring(1, xn.length)+"</mn></msub><mo>=</mo>";
 	if(fim==true){mathml +='<mstyle mathcolor="red">'};
 	
 	/*  CONSTANTE  */
@@ -618,8 +618,8 @@ function monta_mathml_rec_principal_terceira_etapa(funcao) {
 			}
 		}
 		
-		if (coef[i] != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
-			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
+		if (coef[i] != 0) { // apenas mostra a variavel se o coeficiente for diferente de 0
+			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].substring(1, vars[i].length)+'</mn></msub>';
 		}
 		
 	}
@@ -639,7 +639,7 @@ function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 		
 	/* LHS DA FUNCAO */
-	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
+	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.substring(1, xn.length)+"</mn></msub><mo>=</mo>";
 		
 	/*  CONSTANTE  */
 	if (cons != null) {
@@ -718,8 +718,8 @@ function monta_mathml_rec_principal_terceira_etapa_fracoes(funcao, inFrac) {
 			}
 		}
 		
-		if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
-			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
+		if (frac != 0) { // apenas mostra a variavel se o coeficiente for diferente de 0
+			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].substring(1, vars[i].length)+'</mn></msub>';
 		}
 		
 	}
@@ -802,7 +802,7 @@ function monta_mathml_rec_subst_part(funcao) {
 		}
 		
 		if (frac != 0 && vars[i] != null) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
-			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].charAt(1)+'</mn></msub>';
+			mathml += '<msub><mi>'+vars[i].charAt(0)+'</mi><mn>'+vars[i].substring(1, vars[i].length)+'</mn></msub>';
 		}	
 	}
 	return(mathml);
@@ -953,7 +953,7 @@ function monta_mathml_afr(){
 	var check=''; // variavel para verificar se frac ï¿½ uma fracï¿½o ou numero inteiro
 		
 	/* LHS DA FUNCAO */
-	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.charAt(1)+"</mn></msub><mo>=</mo>";
+	mathml += "<msub><mi>"+xn.charAt(0)+"</mi><mn>"+xn.substring(1, xn.length)+"</mn></msub><mo>=</mo>";
 	
 	/*  CONSTANTE  */
 	if (cons != null) {
@@ -1021,7 +1021,7 @@ function monta_mathml_afr(){
   }
 		
   if (frac != 0) { // sï¿½ mostra a variavel se o coeficiente for diferente de 0
-    mathml += '<msub><mi>'+inVar.charAt(0)+'</mi><mn>'+inVar.charAt(1)+'</mn></msub>';
+    mathml += '<msub><mi>'+inVar.charAt(0)+'</mi><mn>'+inVar.substring(1, inVar.length)+'</mn></msub>';
   }
 
 	mathml += '<mo>&ge;</mo><mn>0</mn></math>';
@@ -1072,7 +1072,7 @@ function monta_mathml_afr_second(){
 		}
 	}
 
-	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.substring(1, inVar.length) +"</mn></msub>";
 	if (sinal == 'ge') {
 		mathml += "<mo>&ge;</mo>";
 	}else if (sinal == 'le'){
@@ -1125,7 +1125,7 @@ function monta_mathml_afr_third(){
   }
 	
 	/* LHS DA FUNCAO */
-	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.substring(1, inVar.length)+"</mn></msub>";
 	if (sinal == 'ge') {
 		mathml += "<mo>&ge;</mo>";
 	}else if (sinal == 'le'){
@@ -1180,7 +1180,7 @@ function monta_mathml_afr_third_denfrac(){
   }
 	
 	/* LHS DA FUNCAO */
-	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.substring(1, inVar.length)+"</mn></msub>";
 	if (sinal == 'ge') {
 		mathml += "<mo>&ge;</mo>";
 	}else if (sinal == 'le'){
@@ -1251,7 +1251,7 @@ function monta_mathml_afr_fourth(){
   }
     
 	/* LHS DA FUNCAO */
-	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.charAt(1)+"</mn></msub>";
+	mathml += "<msub><mi>"+inVar.charAt(0)+"</mi><mn>"+inVar.substring(1, inVar.length)+"</mn></msub>";
 	if (sinal == 'ge') {
 		mathml += "<mo>&ge;</mo>";
 	} else if (sinal == 'le') {
